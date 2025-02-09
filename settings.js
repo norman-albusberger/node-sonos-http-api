@@ -14,14 +14,7 @@ function merge(target, source) {
         }
     });
 }
-//Host: 192.168.0.203 | Port: 1883 | User: loxberry | Pass: PDQrFBnjxU7l1v3R
 var settings = {
-    mqtt: {
-        active: true,
-        broker: 'mqtt://192.168.0.203:1883',
-        username: 'loxberry',
-        password: 'PDQrFBnjxU7l1v3R',
-    },
     port: 5005,
     ip: "0.0.0.0",
     securePort: 5006,
