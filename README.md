@@ -1,5 +1,3 @@
-[![PayPal donate button](https://img.shields.io/badge/paypal-donate-yellow.svg)](https://www.paypal.me/jishi "Donate once-off to this project using Paypal") [![Join the chat at gitter](https://img.shields.io/gitter/room/badges/shields.svg)](https://gitter.im/node-sonos-http-api/Lobby "Need assistance? Join the chat at Gitter.im") 
-
 ⚠WARNING!⚠
 
 The Sonos S2 update, released June 2020, still works with this API. However, it might break in the future if and when Sonos decide to drop UPnP as the control protocol. 
