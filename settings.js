@@ -21,7 +21,13 @@ var settings = {
     cacheDir: path.resolve(__dirname, 'cache'),
     webroot: path.resolve(__dirname, 'static'),
     presetDir: path.resolve(__dirname, 'presets'),
-    announceVolume: 40
+    announceVolume: 40,
+    mqtt: {
+        host: 'localhost',
+        port: 1883,
+        topic: 'sonos2mqtt',
+        active: false
+    },
 };
 
 // load user settings from environment for from settings.json
