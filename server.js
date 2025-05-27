@@ -14,6 +14,7 @@ const discovery = new SonosSystem(settings);
 const api = new SonosHttpAPI(discovery, settings);
 
 const setupMQTT = require('./lib/mqttHandler.js');
+const setupTextInputSync = require('./lib/textInputSyncHandler.js');
 
 
 var requestHandler = function (req, res) {
@@ -105,3 +106,5 @@ server.on('error', (err) => {
 if (settings.mqtt.active) {
     setupMQTT(discovery, settings);
 }
+
+setupTextInputSync(discovery, settings);
