@@ -101,7 +101,6 @@ server.on('error', (err) => {
     process.exit(1);
 });
 
-
 // MQTT-Funktionalität aktivieren
 if (settings.mqtt.active) {
     setupMQTT(discovery, settings);

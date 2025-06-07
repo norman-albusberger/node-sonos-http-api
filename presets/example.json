@@ -1,31 +1,22 @@
 {
   "players": [
     {
-      "roomName": "Bathroom",
-      "volume": 10
+      "roomName": "Büro",
+      "volume": 29,
+      "mute": false
     },
     {
-      "roomName": "Kitchen",
-      "volume": 10
-    },
-    {
-      "roomName": "Office",
-      "volume": 10
-    },
-    {
-      "roomName": "Bedroom",
-      "volume": 10
-    },
-    {
-      "roomName": "TV Room",
-      "volume": 15
+      "roomName": "Bad EG",
+      "volume": 15,
+      "mute": false
     }
   ],
+  "state": "stopped",
   "playMode": {
-    "shuffle": true,
     "repeat": "all",
-    "crossfade": false
+    "shuffle": false,
+    "crossfade": true
   },
-  "pauseOthers": false,
-
+  "favorite": "everything i wanted",
+  "source": "everything i wanted"
 }

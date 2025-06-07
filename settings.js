@@ -35,8 +35,6 @@ const settingsFileFullPath = process.env.SETTINGS_PATH || path.resolve(__dirname
 const userSettings = tryLoadJson(settingsFileFullPath);
 merge(settings, userSettings);
 
-logger.debug(settings);
-
 if (!fs.existsSync(settings.webroot + '/tts/')) {
     fs.mkdirSync(settings.webroot + '/tts/');
 }
