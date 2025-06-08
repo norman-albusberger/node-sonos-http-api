@@ -105,5 +105,4 @@ server.on('error', (err) => {
 if (settings.mqtt.active) {
     setupMQTT(discovery, settings);
 }
-
 setupTextInputSync(discovery, settings);
