@@ -12,9 +12,9 @@ SONOS HTTP API
 
 ** Beta is no more, master is up to date with the beta now! **
 
-**This application requires node 4.0.0 or higher!**
+**Recommended runtime: Node 24 LTS**
 
-**This should now work on Node 6+, please let me know if you have issues**
+**Important:** the public HTTP API is being kept stable, but the underlying `sonos-discovery` dependency still comes from an older Node 4-era codebase. In practice the app now has automated tests and local smoke-test coverage on modern Node, but dependency modernization is still in progress.
 
 A simple http based API for controlling your Sonos system.
 
@@ -23,7 +23,7 @@ There is a simple sandbox at /docs (incomplete atm)
 USAGE
 -----
 
-Start by fixing your dependencies. Invoke the following command:
+Start by fixing your dependencies. Use Node 24 LTS, then invoke:
 
 `npm install --production`
 
@@ -1233,4 +1233,3 @@ https://github.com/TimoKorinth/sonos-push-server
 
 A ChatGPT-assisted Siri Shortcut that acts as a virtual assistant to let you find music and control Sonos through voice and chat.
 https://github.com/Barloew/SonoBoss
-

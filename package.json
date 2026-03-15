@@ -5,7 +5,8 @@
   "scripts": {
     "start": "node server.js",
     "dev" :"nodemon server.js",
-    "lint": "eslint lib"
+    "lint": "eslint lib",
+    "test": "node --test test/*.test.js"
   },
   "author": "Jimmy Shimizu <jimmy@shimizu.se>",
   "repository": {
@@ -13,8 +14,8 @@
     "url": "https://github.com/jishi/node-sonos-http-api.git"
   },
   "dependencies": {
+    "@aws-sdk/client-polly": "^3.883.0",
     "anesidora": "^1.2.0",
-    "aws-sdk": "^2.1299.0",
     "basic-auth": "~1.1.0",
     "elevenlabs-node": "2.0.1",
     "fuse.js": "^6.4.1",
@@ -23,14 +24,13 @@
     "mime": "^1.4.1",
     "mqtt": "^5.10.3",
     "music-metadata": "^1.1.0",
-    "request-promise": "~1.0.2",
     "serve-static": "^1.15.0",
-    "sonos-discovery": "https://github.com/jishi/node-sonos-discovery/archive/v1.7.3.tar.gz",
+    "sonos-discovery": "file:vendor/sonos-discovery",
     "wav-file-info": "0.0.8"
   },
   "engines": {
-    "node": ">=4.0.0",
-    "npm": "^2.0.0"
+    "node": ">=24 <25",
+    "npm": ">=10"
   },
   "main": "lib/sonos-http-api.js",
   "license": "MIT",
