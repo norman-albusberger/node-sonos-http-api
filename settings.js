@@ -14,7 +14,7 @@ function merge(target, source) {
         }
     });
 }
-var settings = {
+const settings = {
     port: 5005,
     ip: "0.0.0.0",
     securePort: 5006,
@@ -35,13 +35,15 @@ const settingsFileFullPath = process.env.SETTINGS_PATH || path.resolve(__dirname
 const userSettings = tryLoadJson(settingsFileFullPath);
 merge(settings, userSettings);
 
-if (!fs.existsSync(settings.webroot + '/tts/')) {
-    fs.mkdirSync(settings.webroot + '/tts/');
+const ttsDir = path.join(settings.webroot, 'tts');
+
+if (!fs.existsSync(ttsDir)) {
+    fs.mkdirSync(ttsDir, { recursive: true });
 }
 
 if (!fs.existsSync(settings.cacheDir)) {
     try {
-        fs.mkdirSync(settings.cacheDir);
+        fs.mkdirSync(settings.cacheDir, { recursive: true });
     } catch (err) {
         logger.warn(`Could not create cache directory ${settings.cacheDir}, please create it manually for all features to work.`);
     }

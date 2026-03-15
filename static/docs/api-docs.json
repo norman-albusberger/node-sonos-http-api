@@ -1,0 +1,3604 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "description": "Interactive explorer for the current Sonos HTTP API. This spec is generated from the currently registered endpoint set in the repository and aims to be practical for manual testing.",
+    "version": "2.0.0",
+    "title": "Sonos API Explorer",
+    "termsOfService": "https://github.com/jishi/node-sonos-http-api",
+    "license": {
+      "name": "MIT License",
+      "url": "https://github.com/jishi/node-sonos-http-api/blob/master/LICENSE.md"
+    }
+  },
+  "servers": [
+    {
+      "url": "/"
+    }
+  ],
+  "paths": {
+    "/zones": {
+      "get": {
+        "tags": [
+          "system"
+        ],
+        "summary": "List all Sonos zones",
+        "operationId": "getZones",
+        "responses": {
+          "default": {
+            "description": "success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Zone"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "description": "Returns the current zone topology with coordinator and member state."
+      }
+    },
+    "/events": {
+      "get": {
+        "tags": [
+          "system"
+        ],
+        "summary": "Open the server-sent events stream",
+        "operationId": "events",
+        "responses": {
+          "default": {
+            "description": "success"
+          }
+        },
+        "description": "Streams transport, topology, volume and mute updates as text/event-stream."
+      }
+    },
+    "/lockvolumes": {
+      "get": {
+        "tags": [
+          "system"
+        ],
+        "summary": "Lock all current player volumes",
+        "operationId": "lockVolumes",
+        "responses": {
+          "default": {
+            "description": "success"
+          }
+        }
+      }
+    },
+    "/unlockvolumes": {
+      "get": {
+        "tags": [
+          "system"
+        ],
+        "summary": "Unlock previously locked volumes",
+        "operationId": "unlockVolumes",
+        "responses": {
+          "default": {
+            "description": "success"
+          }
+        }
+      }
+    },
+    "/pauseall/{delayInMinutes}": {
+      "get": {
+        "tags": [
+          "system"
+        ],
+        "summary": "Pause every playing zone",
+        "operationId": "pauseAll",
+        "responses": {
+          "default": {
+            "description": "success"
+          }
+        },
+        "parameters": [
+          {
+            "in": "path",
+            "name": "delayInMinutes",
+            "required": true,
+            "type": "string",
+            "description": "Delay in minutes before the action runs",
+            "default": "0"
+          }
+        ]
+      }
+    },
+    "/resumeall/{delayInMinutes}": {
+      "get": {
+        "tags": [
+          "system"
+        ],
+        "summary": "Resume all zones paused via pauseall",
+        "operationId": "resumeAll",
+        "responses": {
+          "default": {
+            "description": "success"
+          }
+        },
+        "parameters": [
+          {
+            "in": "path",
+            "name": "delayInMinutes",
+            "required": true,
+            "type": "string",
+            "description": "Delay in minutes before the action runs",
+            "default": "0"
+          }
+        ]
+      }
+    },
+    "/reindex": {
+      "get": {
+        "tags": [
+          "system"
+        ],
+        "summary": "Refresh the Sonos library share index",
+        "operationId": "reindex",
+        "responses": {
+          "default": {
+            "description": "success"
+          }
+        }
+      }
+    },
+    "/preset/{preset}": {
+      "get": {
+        "tags": [
+          "system"
+        ],
+        "summary": "Apply a preset by name or inline JSON",
+        "operationId": "preset",
+        "responses": {
+          "default": {
+            "description": "success"
+          }
+        },
+        "parameters": [
+          {
+            "in": "path",
+            "name": "preset",
+            "required": true,
+            "type": "string",
+            "description": "Preset name from presets/ or an inline JSON preset object",
+            "default": "example"
+          }
+        ]
+      }
+    },
+    "/presetplay/{preset}/{source}": {
+      "get": {
+        "tags": [
+          "system"
+        ],
+        "summary": "Apply a preset and then play a favorite source",
+        "operationId": "presetplayFavorite",
+        "responses": {
+          "default": {
+            "description": "success"
+          }
+        },
+        "parameters": [
+          {
+            "in": "path",
+            "name": "preset",
+            "required": true,
+            "type": "string",
+            "description": "Preset name or inline JSON preset object",
+            "default": "example"
+          },
+          {
+            "in": "path",
+            "name": "source",
+            "required": true,
+            "type": "string",
+            "description": "Favorite source name",
+            "default": "BBC Radio 6"
+          }
+        ],
+        "description": "Requires a configured license key."
+      }
+    },
+    "/presetplay/{preset}/{source}/{type}": {
+      "get": {
+        "tags": [
+          "system"
+        ],
+        "summary": "Apply a preset and then play a favorite or playlist source",
+        "operationId": "presetplayTyped",
+        "responses": {
+          "default": {
+            "description": "success"
+          }
+        },
+        "parameters": [
+          {
+            "in": "path",
+            "name": "preset",
+            "required": true,
+            "type": "string",
+            "description": "Preset name or inline JSON preset object",
+            "default": "example"
+          },
+          {
+            "in": "path",
+            "name": "source",
+            "required": true,
+            "type": "string",
+            "description": "Favorite or playlist source name",
+            "default": "Road Trip"
+          },
+          {
+            "in": "path",
+            "name": "type",
+            "required": true,
+            "type": "string",
+            "description": "Source type: fav or plist",
+            "default": "plist"
+          }
+        ],
+        "description": "Requires a configured license key."
+      }
+    },
+    "/services/all": {
+      "get": {
+        "tags": [
+          "system"
+        ],
+        "summary": "List all discovered Sonos music services",
+        "operationId": "servicesAll",
+        "responses": {
+          "default": {
+            "description": "success"
+          }
+        }
+      }
+    },
+    "/clipall/{clipFile}": {
+      "get": {
+        "tags": [
+          "system"
+        ],
+        "summary": "Play a local clip on all players",
+        "operationId": "clipAll",
+        "responses": {
+          "default": {
+            "description": "success"
+          }
+        },
+        "parameters": [
+          {
+            "in": "path",
+            "name": "clipFile",
+            "required": true,
+            "type": "string",
+            "description": "Filename inside static/clips",
+            "default": "doorbell.mp3"
+          }
+        ]
+      }
+    },
+    "/clipall/{clipFile}/{volume}": {
+      "get": {
+        "tags": [
+          "system"
+        ],
+        "summary": "Play a local clip on all players at a specific volume",
+        "operationId": "clipAllWithVolume",
+        "responses": {
+          "default": {
+            "description": "success"
+          }
+        },
+        "parameters": [
+          {
+            "in": "path",
+            "name": "clipFile",
+            "required": true,
+            "type": "string",
+            "description": "Filename inside static/clips",
+            "default": "doorbell.mp3"
+          },
+          {
+            "in": "path",
+            "name": "volume",
+            "required": true,
+            "type": "string",
+            "description": "Announcement volume",
+            "default": "35"
+          }
+        ]
+      }
+    },
+    "/clipavailable/{clipFile}": {
+      "get": {
+        "tags": [
+          "system"
+        ],
+        "summary": "Play a local clip on all currently idle players",
+        "operationId": "clipAvailable",
+        "responses": {
+          "default": {
+            "description": "success"
+          }
+        },
+        "parameters": [
+          {
+            "in": "path",
+            "name": "clipFile",
+            "required": true,
+            "type": "string",
+            "description": "Filename inside static/clips",
+            "default": "doorbell.mp3"
+          }
+        ]
+      }
+    },
+    "/clipavailable/{clipFile}/{volume}": {
+      "get": {
+        "tags": [
+          "system"
+        ],
+        "summary": "Play a local clip on all currently idle players at a specific volume",
+        "operationId": "clipAvailableWithVolume",
+        "responses": {
+          "default": {
+            "description": "success"
+          }
+        },
+        "parameters": [
+          {
+            "in": "path",
+            "name": "clipFile",
+            "required": true,
+            "type": "string",
+            "description": "Filename inside static/clips",
+            "default": "doorbell.mp3"
+          },
+          {
+            "in": "path",
+            "name": "volume",
+            "required": true,
+            "type": "string",
+            "description": "Announcement volume",
+            "default": "35"
+          }
+        ]
+      }
+    },
+    "/clippreset/{preset}/{clipFile}": {
+      "get": {
+        "tags": [
+          "system"
+        ],
+        "summary": "Play a local clip on a preset-defined player group",
+        "operationId": "clipPreset",
+        "responses": {
+          "default": {
+            "description": "success"
+          }
+        },
+        "parameters": [
+          {
+            "in": "path",
+            "name": "preset",
+            "required": true,
+            "type": "string",
+            "description": "Preset name",
+            "default": "example"
+          },
+          {
+            "in": "path",
+            "name": "clipFile",
+            "required": true,
+            "type": "string",
+            "description": "Filename inside static/clips",
+            "default": "doorbell.mp3"
+          }
+        ]
+      }
+    },
+    "/sayall/{text}": {
+      "get": {
+        "tags": [
+          "system"
+        ],
+        "summary": "Create TTS and play it on all players",
+        "operationId": "sayAll",
+        "responses": {
+          "default": {
+            "description": "success"
+          }
+        },
+        "parameters": [
+          {
+            "in": "path",
+            "name": "text",
+            "required": true,
+            "type": "string",
+            "description": "Announcement text",
+            "default": "Dinner is ready"
+          }
+        ]
+      }
+    },
+    "/sayall/{text}/{volumeOrLanguage}": {
+      "get": {
+        "tags": [
+          "system"
+        ],
+        "summary": "Create TTS and play it on all players with volume or language",
+        "operationId": "sayAllVolumeOrLanguage",
+        "responses": {
+          "default": {
+            "description": "success"
+          }
+        },
+        "parameters": [
+          {
+            "in": "path",
+            "name": "text",
+            "required": true,
+            "type": "string",
+            "description": "Announcement text",
+            "default": "Dinner is ready"
+          },
+          {
+            "in": "path",
+            "name": "volumeOrLanguage",
+            "required": true,
+            "type": "string",
+            "description": "Numeric volume or language/voice code",
+            "default": "35"
+          }
+        ]
+      }
+    },
+    "/sayall/{text}/{language}/{volume}": {
+      "get": {
+        "tags": [
+          "system"
+        ],
+        "summary": "Create TTS and play it on all players with language and volume",
+        "operationId": "sayAllLanguageAndVolume",
+        "responses": {
+          "default": {
+            "description": "success"
+          }
+        },
+        "parameters": [
+          {
+            "in": "path",
+            "name": "text",
+            "required": true,
+            "type": "string",
+            "description": "Announcement text",
+            "default": "Dinner is ready"
+          },
+          {
+            "in": "path",
+            "name": "language",
+            "required": true,
+            "type": "string",
+            "description": "Language or voice code",
+            "default": "de"
+          },
+          {
+            "in": "path",
+            "name": "volume",
+            "required": true,
+            "type": "string",
+            "description": "Announcement volume",
+            "default": "35"
+          }
+        ]
+      }
+    },
+    "/saypreset/{preset}/{text}": {
+      "get": {
+        "tags": [
+          "system"
+        ],
+        "summary": "Create TTS and play it on a preset-defined group",
+        "operationId": "sayPreset",
+        "responses": {
+          "default": {
+            "description": "success"
+          }
+        },
+        "parameters": [
+          {
+            "in": "path",
+            "name": "preset",
+            "required": true,
+            "type": "string",
+            "description": "Preset name",
+            "default": "example"
+          },
+          {
+            "in": "path",
+            "name": "text",
+            "required": true,
+            "type": "string",
+            "description": "Announcement text",
+            "default": "Dinner is ready"
+          }
+        ]
+      }
+    },
+    "/saypreset/{preset}/{text}/{language}": {
+      "get": {
+        "tags": [
+          "system"
+        ],
+        "summary": "Create TTS and play it on a preset-defined group with an explicit language",
+        "operationId": "sayPresetWithLanguage",
+        "responses": {
+          "default": {
+            "description": "success"
+          }
+        },
+        "parameters": [
+          {
+            "in": "path",
+            "name": "preset",
+            "required": true,
+            "type": "string",
+            "description": "Preset name",
+            "default": "example"
+          },
+          {
+            "in": "path",
+            "name": "text",
+            "required": true,
+            "type": "string",
+            "description": "Announcement text",
+            "default": "Dinner is ready"
+          },
+          {
+            "in": "path",
+            "name": "language",
+            "required": true,
+            "type": "string",
+            "description": "Language or voice code",
+            "default": "de"
+          }
+        ]
+      }
+    },
+    "/{room}/state": {
+      "get": {
+        "tags": [
+          "room"
+        ],
+        "summary": "Get the current player state",
+        "operationId": "state",
+        "responses": {
+          "default": {
+            "description": "success"
+          }
+        },
+        "parameters": [
+          {
+            "in": "path",
+            "name": "room",
+            "required": true,
+            "type": "string",
+            "description": "Sonos room name, URL-encoded if needed",
+            "default": "Living Room"
+          }
+        ]
+      }
+    },
+    "/{room}/play": {
+      "get": {
+        "tags": [
+          "room"
+        ],
+        "summary": "Start playback on the coordinator",
+        "operationId": "play",
+        "responses": {
+          "default": {
+            "description": "success"
+          }
+        },
+        "parameters": [
+          {
+            "in": "path",
+            "name": "room",
+            "required": true,
+            "type": "string",
+            "description": "Sonos room name, URL-encoded if needed",
+            "default": "Living Room"
+          }
+        ]
+      }
+    },
+    "/{room}/pause": {
+      "get": {
+        "tags": [
+          "room"
+        ],
+        "summary": "Pause playback on the coordinator",
+        "operationId": "pause",
+        "responses": {
+          "default": {
+            "description": "success"
+          }
+        },
+        "parameters": [
+          {
+            "in": "path",
+            "name": "room",
+            "required": true,
+            "type": "string",
+            "description": "Sonos room name, URL-encoded if needed",
+            "default": "Living Room"
+          }
+        ]
+      }
+    },
+    "/{room}/playpause": {
+      "get": {
+        "tags": [
+          "room"
+        ],
+        "summary": "Toggle playback on the coordinator",
+        "operationId": "playpause",
+        "responses": {
+          "default": {
+            "description": "success"
+          }
+        },
+        "parameters": [
+          {
+            "in": "path",
+            "name": "room",
+            "required": true,
+            "type": "string",
+            "description": "Sonos room name, URL-encoded if needed",
+            "default": "Living Room"
+          }
+        ]
+      }
+    },
+    "/{room}/next": {
+      "get": {
+        "tags": [
+          "room"
+        ],
+        "summary": "Skip to the next track",
+        "operationId": "next",
+        "responses": {
+          "default": {
+            "description": "success"
+          }
+        },
+        "parameters": [
+          {
+            "in": "path",
+            "name": "room",
+            "required": true,
+            "type": "string",
+            "description": "Sonos room name, URL-encoded if needed",
+            "default": "Living Room"
+          }
+        ]
+      }
+    },
+    "/{room}/previous": {
+      "get": {
+        "tags": [
+          "room"
+        ],
+        "summary": "Go to the previous track",
+        "operationId": "previous",
+        "responses": {
+          "default": {
+            "description": "success"
+          }
+        },
+        "parameters": [
+          {
+            "in": "path",
+            "name": "room",
+            "required": true,
+            "type": "string",
+            "description": "Sonos room name, URL-encoded if needed",
+            "default": "Living Room"
+          }
+        ]
+      }
+    },
+    "/{room}/clearqueue": {
+      "get": {
+        "tags": [
+          "room"
+        ],
+        "summary": "Clear the current queue",
+        "operationId": "clearQueue",
+        "responses": {
+          "default": {
+            "description": "success"
+          }
+        },
+        "parameters": [
+          {
+            "in": "path",
+            "name": "room",
+            "required": true,
+            "type": "string",
+            "description": "Sonos room name, URL-encoded if needed",
+            "default": "Living Room"
+          }
+        ]
+      }
+    },
+    "/{room}/mute": {
+      "get": {
+        "tags": [
+          "room"
+        ],
+        "summary": "Mute the target player",
+        "operationId": "mute",
+        "responses": {
+          "default": {
+            "description": "success"
+          }
+        },
+        "parameters": [
+          {
+            "in": "path",
+            "name": "room",
+            "required": true,
+            "type": "string",
+            "description": "Sonos room name, URL-encoded if needed",
+            "default": "Living Room"
+          }
+        ]
+      }
+    },
+    "/{room}/unmute": {
+      "get": {
+        "tags": [
+          "room"
+        ],
+        "summary": "Unmute the target player",
+        "operationId": "unmute",
+        "responses": {
+          "default": {
+            "description": "success"
+          }
+        },
+        "parameters": [
+          {
+            "in": "path",
+            "name": "room",
+            "required": true,
+            "type": "string",
+            "description": "Sonos room name, URL-encoded if needed",
+            "default": "Living Room"
+          }
+        ]
+      }
+    },
+    "/{room}/groupmute": {
+      "get": {
+        "tags": [
+          "room"
+        ],
+        "summary": "Mute the coordinator group",
+        "operationId": "groupMute",
+        "responses": {
+          "default": {
+            "description": "success"
+          }
+        },
+        "parameters": [
+          {
+            "in": "path",
+            "name": "room",
+            "required": true,
+            "type": "string",
+            "description": "Sonos room name, URL-encoded if needed",
+            "default": "Living Room"
+          }
+        ]
+      }
+    },
+    "/{room}/groupunmute": {
+      "get": {
+        "tags": [
+          "room"
+        ],
+        "summary": "Unmute the coordinator group",
+        "operationId": "groupUnmute",
+        "responses": {
+          "default": {
+            "description": "success"
+          }
+        },
+        "parameters": [
+          {
+            "in": "path",
+            "name": "room",
+            "required": true,
+            "type": "string",
+            "description": "Sonos room name, URL-encoded if needed",
+            "default": "Living Room"
+          }
+        ]
+      }
+    },
+    "/{room}/mutegroup": {
+      "get": {
+        "tags": [
+          "room"
+        ],
+        "summary": "Mute the coordinator group",
+        "operationId": "muteGroupAlias",
+        "responses": {
+          "default": {
+            "description": "success"
+          }
+        },
+        "parameters": [
+          {
+            "in": "path",
+            "name": "room",
+            "required": true,
+            "type": "string",
+            "description": "Sonos room name, URL-encoded if needed",
+            "default": "Living Room"
+          }
+        ]
+      }
+    },
+    "/{room}/unmutegroup": {
+      "get": {
+        "tags": [
+          "room"
+        ],
+        "summary": "Unmute the coordinator group",
+        "operationId": "unmuteGroupAlias",
+        "responses": {
+          "default": {
+            "description": "success"
+          }
+        },
+        "parameters": [
+          {
+            "in": "path",
+            "name": "room",
+            "required": true,
+            "type": "string",
+            "description": "Sonos room name, URL-encoded if needed",
+            "default": "Living Room"
+          }
+        ]
+      }
+    },
+    "/{room}/togglemute": {
+      "get": {
+        "tags": [
+          "room"
+        ],
+        "summary": "Toggle mute on the target player",
+        "operationId": "toggleMute",
+        "responses": {
+          "default": {
+            "description": "success"
+          }
+        },
+        "parameters": [
+          {
+            "in": "path",
+            "name": "room",
+            "required": true,
+            "type": "string",
+            "description": "Sonos room name, URL-encoded if needed",
+            "default": "Living Room"
+          }
+        ]
+      }
+    },
+    "/{room}/lockvolumes": {
+      "get": {
+        "tags": [
+          "room"
+        ],
+        "summary": "Lock all player volumes using this room context",
+        "operationId": "lockVolumesRoom",
+        "responses": {
+          "default": {
+            "description": "success"
+          }
+        },
+        "parameters": [
+          {
+            "in": "path",
+            "name": "room",
+            "required": true,
+            "type": "string",
+            "description": "Sonos room name, URL-encoded if needed",
+            "default": "Living Room"
+          }
+        ]
+      }
+    },
+    "/{room}/unlockvolumes": {
+      "get": {
+        "tags": [
+          "room"
+        ],
+        "summary": "Unlock all player volumes using this room context",
+        "operationId": "unlockVolumesRoom",
+        "responses": {
+          "default": {
+            "description": "success"
+          }
+        },
+        "parameters": [
+          {
+            "in": "path",
+            "name": "room",
+            "required": true,
+            "type": "string",
+            "description": "Sonos room name, URL-encoded if needed",
+            "default": "Living Room"
+          }
+        ]
+      }
+    },
+    "/{room}/isolate": {
+      "get": {
+        "tags": [
+          "room"
+        ],
+        "summary": "Make the player a standalone coordinator",
+        "operationId": "isolate",
+        "responses": {
+          "default": {
+            "description": "success"
+          }
+        },
+        "parameters": [
+          {
+            "in": "path",
+            "name": "room",
+            "required": true,
+            "type": "string",
+            "description": "Sonos room name, URL-encoded if needed",
+            "default": "Living Room"
+          }
+        ]
+      }
+    },
+    "/{room}/ungroup": {
+      "get": {
+        "tags": [
+          "room"
+        ],
+        "summary": "Make the player leave its current group",
+        "operationId": "ungroup",
+        "responses": {
+          "default": {
+            "description": "success"
+          }
+        },
+        "parameters": [
+          {
+            "in": "path",
+            "name": "room",
+            "required": true,
+            "type": "string",
+            "description": "Sonos room name, URL-encoded if needed",
+            "default": "Living Room"
+          }
+        ]
+      }
+    },
+    "/{room}/leave": {
+      "get": {
+        "tags": [
+          "room"
+        ],
+        "summary": "Make the player leave its current group",
+        "operationId": "leave",
+        "responses": {
+          "default": {
+            "description": "success"
+          }
+        },
+        "parameters": [
+          {
+            "in": "path",
+            "name": "room",
+            "required": true,
+            "type": "string",
+            "description": "Sonos room name, URL-encoded if needed",
+            "default": "Living Room"
+          }
+        ]
+      }
+    },
+    "/{room}/favorites": {
+      "get": {
+        "tags": [
+          "room"
+        ],
+        "summary": "List Sonos favorites",
+        "operationId": "favorites",
+        "responses": {
+          "default": {
+            "description": "success"
+          }
+        },
+        "parameters": [
+          {
+            "in": "path",
+            "name": "room",
+            "required": true,
+            "type": "string",
+            "description": "Sonos room name, URL-encoded if needed",
+            "default": "Living Room"
+          }
+        ]
+      }
+    },
+    "/{room}/favourites": {
+      "get": {
+        "tags": [
+          "room"
+        ],
+        "summary": "List Sonos favorites",
+        "operationId": "favouritesAlias",
+        "responses": {
+          "default": {
+            "description": "success"
+          }
+        },
+        "parameters": [
+          {
+            "in": "path",
+            "name": "room",
+            "required": true,
+            "type": "string",
+            "description": "Sonos room name, URL-encoded if needed",
+            "default": "Living Room"
+          }
+        ]
+      }
+    },
+    "/{room}/favorites/{detail}": {
+      "get": {
+        "tags": [
+          "room"
+        ],
+        "summary": "List Sonos favorites, optionally detailed",
+        "operationId": "favoritesDetailed",
+        "responses": {
+          "default": {
+            "description": "success"
+          }
+        },
+        "parameters": [
+          {
+            "in": "path",
+            "name": "room",
+            "required": true,
+            "type": "string",
+            "description": "Sonos room name, URL-encoded if needed",
+            "default": "Living Room"
+          },
+          {
+            "in": "path",
+            "name": "detail",
+            "required": true,
+            "type": "string",
+            "description": "Use detailed to return the full favorite objects",
+            "default": "detailed"
+          }
+        ]
+      }
+    },
+    "/{room}/favourites/{detail}": {
+      "get": {
+        "tags": [
+          "room"
+        ],
+        "summary": "List Sonos favorites, optionally detailed",
+        "operationId": "favouritesDetailedAlias",
+        "responses": {
+          "default": {
+            "description": "success"
+          }
+        },
+        "parameters": [
+          {
+            "in": "path",
+            "name": "room",
+            "required": true,
+            "type": "string",
+            "description": "Sonos room name, URL-encoded if needed",
+            "default": "Living Room"
+          },
+          {
+            "in": "path",
+            "name": "detail",
+            "required": true,
+            "type": "string",
+            "description": "Use detailed to return the full favorite objects",
+            "default": "detailed"
+          }
+        ]
+      }
+    },
+    "/{room}/playlists": {
+      "get": {
+        "tags": [
+          "room"
+        ],
+        "summary": "List Sonos saved queues/playlists",
+        "operationId": "playlists",
+        "responses": {
+          "default": {
+            "description": "success"
+          }
+        },
+        "parameters": [
+          {
+            "in": "path",
+            "name": "room",
+            "required": true,
+            "type": "string",
+            "description": "Sonos room name, URL-encoded if needed",
+            "default": "Living Room"
+          }
+        ]
+      }
+    },
+    "/{room}/playlists/{detail}": {
+      "get": {
+        "tags": [
+          "room"
+        ],
+        "summary": "List Sonos saved queues/playlists, optionally detailed",
+        "operationId": "playlistsDetailed",
+        "responses": {
+          "default": {
+            "description": "success"
+          }
+        },
+        "parameters": [
+          {
+            "in": "path",
+            "name": "room",
+            "required": true,
+            "type": "string",
+            "description": "Sonos room name, URL-encoded if needed",
+            "default": "Living Room"
+          },
+          {
+            "in": "path",
+            "name": "detail",
+            "required": true,
+            "type": "string",
+            "description": "Use detailed to return the full playlist objects",
+            "default": "detailed"
+          }
+        ]
+      }
+    },
+    "/{room}/debug": {
+      "get": {
+        "tags": [
+          "room"
+        ],
+        "summary": "Return discovery/player debug details",
+        "operationId": "debug",
+        "responses": {
+          "default": {
+            "description": "success"
+          }
+        },
+        "parameters": [
+          {
+            "in": "path",
+            "name": "room",
+            "required": true,
+            "type": "string",
+            "description": "Sonos room name, URL-encoded if needed",
+            "default": "Living Room"
+          }
+        ]
+      }
+    },
+    "/{room}/volume/{volume}": {
+      "get": {
+        "tags": [
+          "room"
+        ],
+        "summary": "Set the player volume",
+        "operationId": "volume",
+        "responses": {
+          "default": {
+            "description": "success"
+          }
+        },
+        "parameters": [
+          {
+            "in": "path",
+            "name": "room",
+            "required": true,
+            "type": "string",
+            "description": "Sonos room name, URL-encoded if needed",
+            "default": "Living Room"
+          },
+          {
+            "in": "path",
+            "name": "volume",
+            "required": true,
+            "type": "string",
+            "description": "Absolute or relative volume, e.g. 15 or +1",
+            "default": "15"
+          }
+        ]
+      }
+    },
+    "/{room}/groupvolume/{volume}": {
+      "get": {
+        "tags": [
+          "room"
+        ],
+        "summary": "Set the group volume",
+        "operationId": "groupVolume",
+        "responses": {
+          "default": {
+            "description": "success"
+          }
+        },
+        "parameters": [
+          {
+            "in": "path",
+            "name": "room",
+            "required": true,
+            "type": "string",
+            "description": "Sonos room name, URL-encoded if needed",
+            "default": "Living Room"
+          },
+          {
+            "in": "path",
+            "name": "volume",
+            "required": true,
+            "type": "string",
+            "description": "Absolute or relative group volume, e.g. 35 or -5",
+            "default": "35"
+          }
+        ]
+      }
+    },
+    "/{room}/favorite/{name}": {
+      "get": {
+        "tags": [
+          "room"
+        ],
+        "summary": "Replace playback with a Sonos favorite and play it",
+        "operationId": "favorite",
+        "responses": {
+          "default": {
+            "description": "success"
+          }
+        },
+        "parameters": [
+          {
+            "in": "path",
+            "name": "room",
+            "required": true,
+            "type": "string",
+            "description": "Sonos room name, URL-encoded if needed",
+            "default": "Living Room"
+          },
+          {
+            "in": "path",
+            "name": "name",
+            "required": true,
+            "type": "string",
+            "description": "Favorite name",
+            "default": "BBC Radio 6"
+          }
+        ]
+      }
+    },
+    "/{room}/favourite/{name}": {
+      "get": {
+        "tags": [
+          "room"
+        ],
+        "summary": "Replace playback with a Sonos favorite and play it",
+        "operationId": "favourite",
+        "responses": {
+          "default": {
+            "description": "success"
+          }
+        },
+        "parameters": [
+          {
+            "in": "path",
+            "name": "room",
+            "required": true,
+            "type": "string",
+            "description": "Sonos room name, URL-encoded if needed",
+            "default": "Living Room"
+          },
+          {
+            "in": "path",
+            "name": "name",
+            "required": true,
+            "type": "string",
+            "description": "Favorite name",
+            "default": "BBC Radio 6"
+          }
+        ]
+      }
+    },
+    "/{room}/playlist/{name}": {
+      "get": {
+        "tags": [
+          "room"
+        ],
+        "summary": "Replace playback with a Sonos playlist and play it",
+        "operationId": "playlist",
+        "responses": {
+          "default": {
+            "description": "success"
+          }
+        },
+        "parameters": [
+          {
+            "in": "path",
+            "name": "room",
+            "required": true,
+            "type": "string",
+            "description": "Sonos room name, URL-encoded if needed",
+            "default": "Living Room"
+          },
+          {
+            "in": "path",
+            "name": "name",
+            "required": true,
+            "type": "string",
+            "description": "Playlist name",
+            "default": "Road Trip"
+          }
+        ]
+      }
+    },
+    "/{room}/linein/{sourceRoom}": {
+      "get": {
+        "tags": [
+          "room"
+        ],
+        "summary": "Play analog line-in from another room",
+        "operationId": "lineIn",
+        "responses": {
+          "default": {
+            "description": "success"
+          }
+        },
+        "parameters": [
+          {
+            "in": "path",
+            "name": "room",
+            "required": true,
+            "type": "string",
+            "description": "Sonos room name, URL-encoded if needed",
+            "default": "Living Room"
+          },
+          {
+            "in": "path",
+            "name": "sourceRoom",
+            "required": true,
+            "type": "string",
+            "description": "Source room name",
+            "default": "Living Room"
+          }
+        ]
+      }
+    },
+    "/{room}/sleep/{timeout}": {
+      "get": {
+        "tags": [
+          "room"
+        ],
+        "summary": "Set or clear the sleep timer",
+        "operationId": "sleep",
+        "responses": {
+          "default": {
+            "description": "success"
+          }
+        },
+        "parameters": [
+          {
+            "in": "path",
+            "name": "room",
+            "required": true,
+            "type": "string",
+            "description": "Sonos room name, URL-encoded if needed",
+            "default": "Living Room"
+          },
+          {
+            "in": "path",
+            "name": "timeout",
+            "required": true,
+            "type": "string",
+            "description": "Seconds or off",
+            "default": "600"
+          }
+        ]
+      }
+    },
+    "/{room}/repeat/{mode}": {
+      "get": {
+        "tags": [
+          "room"
+        ],
+        "summary": "Set repeat mode",
+        "operationId": "repeat",
+        "responses": {
+          "default": {
+            "description": "success"
+          }
+        },
+        "parameters": [
+          {
+            "in": "path",
+            "name": "room",
+            "required": true,
+            "type": "string",
+            "description": "Sonos room name, URL-encoded if needed",
+            "default": "Living Room"
+          },
+          {
+            "in": "path",
+            "name": "mode",
+            "required": true,
+            "type": "string",
+            "description": "on, off, one, none, all or toggle",
+            "default": "on"
+          }
+        ]
+      }
+    },
+    "/{room}/shuffle/{mode}": {
+      "get": {
+        "tags": [
+          "room"
+        ],
+        "summary": "Set shuffle mode",
+        "operationId": "shuffle",
+        "responses": {
+          "default": {
+            "description": "success"
+          }
+        },
+        "parameters": [
+          {
+            "in": "path",
+            "name": "room",
+            "required": true,
+            "type": "string",
+            "description": "Sonos room name, URL-encoded if needed",
+            "default": "Living Room"
+          },
+          {
+            "in": "path",
+            "name": "mode",
+            "required": true,
+            "type": "string",
+            "description": "on, off or toggle",
+            "default": "toggle"
+          }
+        ]
+      }
+    },
+    "/{room}/crossfade/{mode}": {
+      "get": {
+        "tags": [
+          "room"
+        ],
+        "summary": "Set crossfade mode",
+        "operationId": "crossfade",
+        "responses": {
+          "default": {
+            "description": "success"
+          }
+        },
+        "parameters": [
+          {
+            "in": "path",
+            "name": "room",
+            "required": true,
+            "type": "string",
+            "description": "Sonos room name, URL-encoded if needed",
+            "default": "Living Room"
+          },
+          {
+            "in": "path",
+            "name": "mode",
+            "required": true,
+            "type": "string",
+            "description": "on, off or toggle",
+            "default": "toggle"
+          }
+        ]
+      }
+    },
+    "/{room}/seek/{seconds}": {
+      "get": {
+        "tags": [
+          "room"
+        ],
+        "summary": "Seek within the current track",
+        "operationId": "seekDeprecated",
+        "responses": {
+          "default": {
+            "description": "success"
+          }
+        },
+        "parameters": [
+          {
+            "in": "path",
+            "name": "room",
+            "required": true,
+            "type": "string",
+            "description": "Sonos room name, URL-encoded if needed",
+            "default": "Living Room"
+          },
+          {
+            "in": "path",
+            "name": "seconds",
+            "required": true,
+            "type": "string",
+            "description": "Position in seconds",
+            "default": "60"
+          }
+        ],
+        "description": "Deprecated alias for timeseek."
+      }
+    },
+    "/{room}/timeseek/{seconds}": {
+      "get": {
+        "tags": [
+          "room"
+        ],
+        "summary": "Seek within the current track",
+        "operationId": "timeSeek",
+        "responses": {
+          "default": {
+            "description": "success"
+          }
+        },
+        "parameters": [
+          {
+            "in": "path",
+            "name": "room",
+            "required": true,
+            "type": "string",
+            "description": "Sonos room name, URL-encoded if needed",
+            "default": "Living Room"
+          },
+          {
+            "in": "path",
+            "name": "seconds",
+            "required": true,
+            "type": "string",
+            "description": "Position in seconds",
+            "default": "60"
+          }
+        ]
+      }
+    },
+    "/{room}/trackseek/{trackNo}": {
+      "get": {
+        "tags": [
+          "room"
+        ],
+        "summary": "Seek to a specific queue index",
+        "operationId": "trackSeek",
+        "responses": {
+          "default": {
+            "description": "success"
+          }
+        },
+        "parameters": [
+          {
+            "in": "path",
+            "name": "room",
+            "required": true,
+            "type": "string",
+            "description": "Sonos room name, URL-encoded if needed",
+            "default": "Living Room"
+          },
+          {
+            "in": "path",
+            "name": "trackNo",
+            "required": true,
+            "type": "string",
+            "description": "Queue position",
+            "default": "5"
+          }
+        ]
+      }
+    },
+    "/{room}/setavtransporturi/{uri}": {
+      "get": {
+        "tags": [
+          "room"
+        ],
+        "summary": "Set AV transport URI directly",
+        "operationId": "setAvTransportUri",
+        "responses": {
+          "default": {
+            "description": "success"
+          }
+        },
+        "parameters": [
+          {
+            "in": "path",
+            "name": "room",
+            "required": true,
+            "type": "string",
+            "description": "Sonos room name, URL-encoded if needed",
+            "default": "Living Room"
+          },
+          {
+            "in": "path",
+            "name": "uri",
+            "required": true,
+            "type": "string",
+            "description": "URI to set as transport target",
+            "default": "x-rincon-queue:RINCON_123456789ABC01400#0"
+          }
+        ]
+      }
+    },
+    "/{room}/join/{targetRoom}": {
+      "get": {
+        "tags": [
+          "room"
+        ],
+        "summary": "Join the target room coordinator",
+        "operationId": "join",
+        "responses": {
+          "default": {
+            "description": "success"
+          }
+        },
+        "parameters": [
+          {
+            "in": "path",
+            "name": "room",
+            "required": true,
+            "type": "string",
+            "description": "Sonos room name, URL-encoded if needed",
+            "default": "Living Room"
+          },
+          {
+            "in": "path",
+            "name": "targetRoom",
+            "required": true,
+            "type": "string",
+            "description": "Target room name",
+            "default": "Kitchen"
+          }
+        ]
+      }
+    },
+    "/{room}/add/{joiningRoom}": {
+      "get": {
+        "tags": [
+          "room"
+        ],
+        "summary": "Add another room into this coordinator group",
+        "operationId": "addToGroup",
+        "responses": {
+          "default": {
+            "description": "success"
+          }
+        },
+        "parameters": [
+          {
+            "in": "path",
+            "name": "room",
+            "required": true,
+            "type": "string",
+            "description": "Sonos room name, URL-encoded if needed",
+            "default": "Living Room"
+          },
+          {
+            "in": "path",
+            "name": "joiningRoom",
+            "required": true,
+            "type": "string",
+            "description": "Room to add to this group",
+            "default": "Kitchen"
+          }
+        ]
+      }
+    },
+    "/{room}/queue": {
+      "get": {
+        "tags": [
+          "room"
+        ],
+        "summary": "Get the current queue",
+        "operationId": "queue",
+        "responses": {
+          "default": {
+            "description": "success"
+          }
+        },
+        "parameters": [
+          {
+            "in": "path",
+            "name": "room",
+            "required": true,
+            "type": "string",
+            "description": "Sonos room name, URL-encoded if needed",
+            "default": "Living Room"
+          }
+        ]
+      }
+    },
+    "/{room}/queue/detailed": {
+      "get": {
+        "tags": [
+          "room"
+        ],
+        "summary": "Get the current queue with full item details",
+        "operationId": "queueDetailed",
+        "responses": {
+          "default": {
+            "description": "success"
+          }
+        },
+        "parameters": [
+          {
+            "in": "path",
+            "name": "room",
+            "required": true,
+            "type": "string",
+            "description": "Sonos room name, URL-encoded if needed",
+            "default": "Living Room"
+          }
+        ]
+      }
+    },
+    "/{room}/queue/{limit}": {
+      "get": {
+        "tags": [
+          "room"
+        ],
+        "summary": "Get the first queue items up to a limit",
+        "operationId": "queueLimit",
+        "responses": {
+          "default": {
+            "description": "success"
+          }
+        },
+        "parameters": [
+          {
+            "in": "path",
+            "name": "room",
+            "required": true,
+            "type": "string",
+            "description": "Sonos room name, URL-encoded if needed",
+            "default": "Living Room"
+          },
+          {
+            "in": "path",
+            "name": "limit",
+            "required": true,
+            "type": "string",
+            "description": "Maximum number of queue items",
+            "default": "10"
+          }
+        ]
+      }
+    },
+    "/{room}/queue/{limit}/{offset}": {
+      "get": {
+        "tags": [
+          "room"
+        ],
+        "summary": "Get queue items with limit and offset",
+        "operationId": "queueLimitOffset",
+        "responses": {
+          "default": {
+            "description": "success"
+          }
+        },
+        "parameters": [
+          {
+            "in": "path",
+            "name": "room",
+            "required": true,
+            "type": "string",
+            "description": "Sonos room name, URL-encoded if needed",
+            "default": "Living Room"
+          },
+          {
+            "in": "path",
+            "name": "limit",
+            "required": true,
+            "type": "string",
+            "description": "Maximum number of queue items",
+            "default": "10"
+          },
+          {
+            "in": "path",
+            "name": "offset",
+            "required": true,
+            "type": "string",
+            "description": "Queue offset",
+            "default": "10"
+          }
+        ]
+      }
+    },
+    "/{room}/queue/{limit}/detailed": {
+      "get": {
+        "tags": [
+          "room"
+        ],
+        "summary": "Get queue items with a limit and full details",
+        "operationId": "queueLimitDetailed",
+        "responses": {
+          "default": {
+            "description": "success"
+          }
+        },
+        "parameters": [
+          {
+            "in": "path",
+            "name": "room",
+            "required": true,
+            "type": "string",
+            "description": "Sonos room name, URL-encoded if needed",
+            "default": "Living Room"
+          },
+          {
+            "in": "path",
+            "name": "limit",
+            "required": true,
+            "type": "string",
+            "description": "Maximum number of queue items",
+            "default": "10"
+          }
+        ]
+      }
+    },
+    "/{room}/nightmode/{mode}": {
+      "get": {
+        "tags": [
+          "room"
+        ],
+        "summary": "Set TV night mode",
+        "operationId": "nightMode",
+        "responses": {
+          "default": {
+            "description": "success"
+          }
+        },
+        "parameters": [
+          {
+            "in": "path",
+            "name": "room",
+            "required": true,
+            "type": "string",
+            "description": "Sonos room name, URL-encoded if needed",
+            "default": "Living Room"
+          },
+          {
+            "in": "path",
+            "name": "mode",
+            "required": true,
+            "type": "string",
+            "description": "on, off or toggle",
+            "default": "toggle"
+          }
+        ]
+      }
+    },
+    "/{room}/speechenhancement/{mode}": {
+      "get": {
+        "tags": [
+          "room"
+        ],
+        "summary": "Set TV speech enhancement",
+        "operationId": "speechEnhancement",
+        "responses": {
+          "default": {
+            "description": "success"
+          }
+        },
+        "parameters": [
+          {
+            "in": "path",
+            "name": "room",
+            "required": true,
+            "type": "string",
+            "description": "Sonos room name, URL-encoded if needed",
+            "default": "Living Room"
+          },
+          {
+            "in": "path",
+            "name": "mode",
+            "required": true,
+            "type": "string",
+            "description": "on, off or toggle",
+            "default": "toggle"
+          }
+        ]
+      }
+    },
+    "/{room}/bass/{level}": {
+      "get": {
+        "tags": [
+          "room"
+        ],
+        "summary": "Set bass level",
+        "operationId": "bass",
+        "responses": {
+          "default": {
+            "description": "success"
+          }
+        },
+        "parameters": [
+          {
+            "in": "path",
+            "name": "room",
+            "required": true,
+            "type": "string",
+            "description": "Sonos room name, URL-encoded if needed",
+            "default": "Living Room"
+          },
+          {
+            "in": "path",
+            "name": "level",
+            "required": true,
+            "type": "string",
+            "description": "Bass level from -10 to 10",
+            "default": "0"
+          }
+        ]
+      }
+    },
+    "/{room}/treble/{level}": {
+      "get": {
+        "tags": [
+          "room"
+        ],
+        "summary": "Set treble level",
+        "operationId": "treble",
+        "responses": {
+          "default": {
+            "description": "success"
+          }
+        },
+        "parameters": [
+          {
+            "in": "path",
+            "name": "room",
+            "required": true,
+            "type": "string",
+            "description": "Sonos room name, URL-encoded if needed",
+            "default": "Living Room"
+          },
+          {
+            "in": "path",
+            "name": "level",
+            "required": true,
+            "type": "string",
+            "description": "Treble level from -10 to 10",
+            "default": "0"
+          }
+        ]
+      }
+    },
+    "/{room}/sub/{action}": {
+      "get": {
+        "tags": [
+          "room"
+        ],
+        "summary": "Control the connected SUB",
+        "operationId": "subAction",
+        "responses": {
+          "default": {
+            "description": "success"
+          }
+        },
+        "parameters": [
+          {
+            "in": "path",
+            "name": "room",
+            "required": true,
+            "type": "string",
+            "description": "Sonos room name, URL-encoded if needed",
+            "default": "Living Room"
+          },
+          {
+            "in": "path",
+            "name": "action",
+            "required": true,
+            "type": "string",
+            "description": "on, off, gain, crossover or polarity",
+            "default": "on"
+          }
+        ]
+      }
+    },
+    "/{room}/sub/{action}/{value}": {
+      "get": {
+        "tags": [
+          "room"
+        ],
+        "summary": "Control the connected SUB with a value",
+        "operationId": "subActionWithValue",
+        "responses": {
+          "default": {
+            "description": "success"
+          }
+        },
+        "parameters": [
+          {
+            "in": "path",
+            "name": "room",
+            "required": true,
+            "type": "string",
+            "description": "Sonos room name, URL-encoded if needed",
+            "default": "Living Room"
+          },
+          {
+            "in": "path",
+            "name": "action",
+            "required": true,
+            "type": "string",
+            "description": "gain, crossover or polarity",
+            "default": "gain"
+          },
+          {
+            "in": "path",
+            "name": "value",
+            "required": true,
+            "type": "string",
+            "description": "Action value",
+            "default": "0"
+          }
+        ]
+      }
+    },
+    "/{room}/say/{text}": {
+      "get": {
+        "tags": [
+          "room"
+        ],
+        "summary": "Create TTS and play it on a single player",
+        "operationId": "say",
+        "responses": {
+          "default": {
+            "description": "success"
+          }
+        },
+        "parameters": [
+          {
+            "in": "path",
+            "name": "room",
+            "required": true,
+            "type": "string",
+            "description": "Sonos room name, URL-encoded if needed",
+            "default": "Living Room"
+          },
+          {
+            "in": "path",
+            "name": "text",
+            "required": true,
+            "type": "string",
+            "description": "Announcement text",
+            "default": "Front door"
+          }
+        ]
+      }
+    },
+    "/{room}/say/{text}/{volumeOrLanguage}": {
+      "get": {
+        "tags": [
+          "room"
+        ],
+        "summary": "Create TTS and play it with volume or language",
+        "operationId": "sayVolumeOrLanguage",
+        "responses": {
+          "default": {
+            "description": "success"
+          }
+        },
+        "parameters": [
+          {
+            "in": "path",
+            "name": "room",
+            "required": true,
+            "type": "string",
+            "description": "Sonos room name, URL-encoded if needed",
+            "default": "Living Room"
+          },
+          {
+            "in": "path",
+            "name": "text",
+            "required": true,
+            "type": "string",
+            "description": "Announcement text",
+            "default": "Front door"
+          },
+          {
+            "in": "path",
+            "name": "volumeOrLanguage",
+            "required": true,
+            "type": "string",
+            "description": "Numeric volume or language/voice code",
+            "default": "35"
+          }
+        ]
+      }
+    },
+    "/{room}/say/{text}/{language}/{volume}": {
+      "get": {
+        "tags": [
+          "room"
+        ],
+        "summary": "Create TTS and play it with language and volume",
+        "operationId": "sayLanguageAndVolume",
+        "responses": {
+          "default": {
+            "description": "success"
+          }
+        },
+        "parameters": [
+          {
+            "in": "path",
+            "name": "room",
+            "required": true,
+            "type": "string",
+            "description": "Sonos room name, URL-encoded if needed",
+            "default": "Living Room"
+          },
+          {
+            "in": "path",
+            "name": "text",
+            "required": true,
+            "type": "string",
+            "description": "Announcement text",
+            "default": "Front door"
+          },
+          {
+            "in": "path",
+            "name": "language",
+            "required": true,
+            "type": "string",
+            "description": "Language or voice code",
+            "default": "de"
+          },
+          {
+            "in": "path",
+            "name": "volume",
+            "required": true,
+            "type": "string",
+            "description": "Announcement volume",
+            "default": "35"
+          }
+        ]
+      }
+    },
+    "/{room}/clip/{clipFile}": {
+      "get": {
+        "tags": [
+          "room"
+        ],
+        "summary": "Play a local clip on a single player",
+        "operationId": "clip",
+        "responses": {
+          "default": {
+            "description": "success"
+          }
+        },
+        "parameters": [
+          {
+            "in": "path",
+            "name": "room",
+            "required": true,
+            "type": "string",
+            "description": "Sonos room name, URL-encoded if needed",
+            "default": "Living Room"
+          },
+          {
+            "in": "path",
+            "name": "clipFile",
+            "required": true,
+            "type": "string",
+            "description": "Filename inside static/clips",
+            "default": "doorbell.mp3"
+          }
+        ]
+      }
+    },
+    "/{room}/clip/{clipFile}/{volume}": {
+      "get": {
+        "tags": [
+          "room"
+        ],
+        "summary": "Play a local clip on a single player at a specific volume",
+        "operationId": "clipWithVolume",
+        "responses": {
+          "default": {
+            "description": "success"
+          }
+        },
+        "parameters": [
+          {
+            "in": "path",
+            "name": "room",
+            "required": true,
+            "type": "string",
+            "description": "Sonos room name, URL-encoded if needed",
+            "default": "Living Room"
+          },
+          {
+            "in": "path",
+            "name": "clipFile",
+            "required": true,
+            "type": "string",
+            "description": "Filename inside static/clips",
+            "default": "doorbell.mp3"
+          },
+          {
+            "in": "path",
+            "name": "volume",
+            "required": true,
+            "type": "string",
+            "description": "Announcement volume",
+            "default": "35"
+          }
+        ]
+      }
+    },
+    "/{room}/clipavailable/{clipFile}": {
+      "get": {
+        "tags": [
+          "room"
+        ],
+        "summary": "Play a local clip on all currently idle players",
+        "operationId": "clipAvailableRoom",
+        "responses": {
+          "default": {
+            "description": "success"
+          }
+        },
+        "parameters": [
+          {
+            "in": "path",
+            "name": "room",
+            "required": true,
+            "type": "string",
+            "description": "Sonos room name, URL-encoded if needed",
+            "default": "Living Room"
+          },
+          {
+            "in": "path",
+            "name": "clipFile",
+            "required": true,
+            "type": "string",
+            "description": "Filename inside static/clips",
+            "default": "doorbell.mp3"
+          }
+        ]
+      }
+    },
+    "/{room}/clipavailable/{clipFile}/{volume}": {
+      "get": {
+        "tags": [
+          "room"
+        ],
+        "summary": "Play a local clip on all currently idle players at a specific volume",
+        "operationId": "clipAvailableRoomWithVolume",
+        "responses": {
+          "default": {
+            "description": "success"
+          }
+        },
+        "parameters": [
+          {
+            "in": "path",
+            "name": "room",
+            "required": true,
+            "type": "string",
+            "description": "Sonos room name, URL-encoded if needed",
+            "default": "Living Room"
+          },
+          {
+            "in": "path",
+            "name": "clipFile",
+            "required": true,
+            "type": "string",
+            "description": "Filename inside static/clips",
+            "default": "doorbell.mp3"
+          },
+          {
+            "in": "path",
+            "name": "volume",
+            "required": true,
+            "type": "string",
+            "description": "Announcement volume",
+            "default": "35"
+          }
+        ]
+      }
+    },
+    "/{room}/clippreset/{preset}/{clipFile}": {
+      "get": {
+        "tags": [
+          "room"
+        ],
+        "summary": "Play a local clip on a preset-defined player group",
+        "operationId": "clipPresetRoom",
+        "responses": {
+          "default": {
+            "description": "success"
+          }
+        },
+        "parameters": [
+          {
+            "in": "path",
+            "name": "room",
+            "required": true,
+            "type": "string",
+            "description": "Sonos room name, URL-encoded if needed",
+            "default": "Living Room"
+          },
+          {
+            "in": "path",
+            "name": "preset",
+            "required": true,
+            "type": "string",
+            "description": "Preset name",
+            "default": "example"
+          },
+          {
+            "in": "path",
+            "name": "clipFile",
+            "required": true,
+            "type": "string",
+            "description": "Filename inside static/clips",
+            "default": "doorbell.mp3"
+          }
+        ]
+      }
+    },
+    "/{room}/saypreset/{preset}/{text}": {
+      "get": {
+        "tags": [
+          "room"
+        ],
+        "summary": "Create TTS and play it on a preset-defined player group",
+        "operationId": "sayPresetRoom",
+        "responses": {
+          "default": {
+            "description": "success"
+          }
+        },
+        "parameters": [
+          {
+            "in": "path",
+            "name": "room",
+            "required": true,
+            "type": "string",
+            "description": "Sonos room name, URL-encoded if needed",
+            "default": "Living Room"
+          },
+          {
+            "in": "path",
+            "name": "preset",
+            "required": true,
+            "type": "string",
+            "description": "Preset name",
+            "default": "example"
+          },
+          {
+            "in": "path",
+            "name": "text",
+            "required": true,
+            "type": "string",
+            "description": "Announcement text",
+            "default": "Front door"
+          }
+        ]
+      }
+    },
+    "/{room}/saypreset/{preset}/{text}/{language}": {
+      "get": {
+        "tags": [
+          "room"
+        ],
+        "summary": "Create TTS and play it on a preset-defined player group with language",
+        "operationId": "sayPresetRoomWithLanguage",
+        "responses": {
+          "default": {
+            "description": "success"
+          }
+        },
+        "parameters": [
+          {
+            "in": "path",
+            "name": "room",
+            "required": true,
+            "type": "string",
+            "description": "Sonos room name, URL-encoded if needed",
+            "default": "Living Room"
+          },
+          {
+            "in": "path",
+            "name": "preset",
+            "required": true,
+            "type": "string",
+            "description": "Preset name",
+            "default": "example"
+          },
+          {
+            "in": "path",
+            "name": "text",
+            "required": true,
+            "type": "string",
+            "description": "Announcement text",
+            "default": "Front door"
+          },
+          {
+            "in": "path",
+            "name": "language",
+            "required": true,
+            "type": "string",
+            "description": "Language or voice code",
+            "default": "de"
+          }
+        ]
+      }
+    },
+    "/{room}/services/{mode}": {
+      "get": {
+        "tags": [
+          "room"
+        ],
+        "summary": "List available Sonos services",
+        "operationId": "services",
+        "responses": {
+          "default": {
+            "description": "success"
+          }
+        },
+        "parameters": [
+          {
+            "in": "path",
+            "name": "room",
+            "required": true,
+            "type": "string",
+            "description": "Sonos room name, URL-encoded if needed",
+            "default": "Living Room"
+          },
+          {
+            "in": "path",
+            "name": "mode",
+            "required": true,
+            "type": "string",
+            "description": "Use all to return all services",
+            "default": "all"
+          }
+        ]
+      }
+    },
+    "/{room}/tunein/{action}/{stationId}": {
+      "get": {
+        "tags": [
+          "room"
+        ],
+        "summary": "Play or set a TuneIn station",
+        "operationId": "tuneIn",
+        "responses": {
+          "default": {
+            "description": "success"
+          }
+        },
+        "parameters": [
+          {
+            "in": "path",
+            "name": "room",
+            "required": true,
+            "type": "string",
+            "description": "Sonos room name, URL-encoded if needed",
+            "default": "Living Room"
+          },
+          {
+            "in": "path",
+            "name": "action",
+            "required": true,
+            "type": "string",
+            "description": "play or set",
+            "default": "play"
+          },
+          {
+            "in": "path",
+            "name": "stationId",
+            "required": true,
+            "type": "string",
+            "description": "TuneIn station identifier",
+            "default": "s24873"
+          }
+        ]
+      }
+    },
+    "/{room}/bbcsounds/{action}/{station}": {
+      "get": {
+        "tags": [
+          "room"
+        ],
+        "summary": "Play or set a BBC Sounds station",
+        "operationId": "bbcSounds",
+        "responses": {
+          "default": {
+            "description": "success"
+          }
+        },
+        "parameters": [
+          {
+            "in": "path",
+            "name": "room",
+            "required": true,
+            "type": "string",
+            "description": "Sonos room name, URL-encoded if needed",
+            "default": "Living Room"
+          },
+          {
+            "in": "path",
+            "name": "action",
+            "required": true,
+            "type": "string",
+            "description": "play or set",
+            "default": "play"
+          },
+          {
+            "in": "path",
+            "name": "station",
+            "required": true,
+            "type": "string",
+            "description": "BBC Sounds station name",
+            "default": "bbc_radio_one"
+          }
+        ]
+      }
+    },
+    "/{room}/pandora/{action}/{value}": {
+      "get": {
+        "tags": [
+          "room"
+        ],
+        "summary": "Control Pandora playback or feedback",
+        "operationId": "pandora",
+        "responses": {
+          "default": {
+            "description": "success"
+          }
+        },
+        "parameters": [
+          {
+            "in": "path",
+            "name": "room",
+            "required": true,
+            "type": "string",
+            "description": "Sonos room name, URL-encoded if needed",
+            "default": "Living Room"
+          },
+          {
+            "in": "path",
+            "name": "action",
+            "required": true,
+            "type": "string",
+            "description": "play, thumbsup or thumbsdown",
+            "default": "play"
+          },
+          {
+            "in": "path",
+            "name": "value",
+            "required": true,
+            "type": "string",
+            "description": "Station search term or current-track feedback target",
+            "default": "Chill"
+          }
+        ]
+      }
+    },
+    "/{room}/siriusxm/{query}": {
+      "get": {
+        "tags": [
+          "room"
+        ],
+        "summary": "Play a SiriusXM station by channel number or title",
+        "operationId": "siriusXm",
+        "responses": {
+          "default": {
+            "description": "success"
+          }
+        },
+        "parameters": [
+          {
+            "in": "path",
+            "name": "room",
+            "required": true,
+            "type": "string",
+            "description": "Sonos room name, URL-encoded if needed",
+            "default": "Living Room"
+          },
+          {
+            "in": "path",
+            "name": "query",
+            "required": true,
+            "type": "string",
+            "description": "Channel number, station title, or special values like channels or stations",
+            "default": "70"
+          }
+        ]
+      }
+    },
+    "/{room}/spotify/{action}/{spotifyUri}": {
+      "get": {
+        "tags": [
+          "room"
+        ],
+        "summary": "Queue or play a Spotify track, album or playlist",
+        "operationId": "spotify",
+        "responses": {
+          "default": {
+            "description": "success"
+          }
+        },
+        "parameters": [
+          {
+            "in": "path",
+            "name": "room",
+            "required": true,
+            "type": "string",
+            "description": "Sonos room name, URL-encoded if needed",
+            "default": "Living Room"
+          },
+          {
+            "in": "path",
+            "name": "action",
+            "required": true,
+            "type": "string",
+            "description": "queue, now or next",
+            "default": "queue"
+          },
+          {
+            "in": "path",
+            "name": "spotifyUri",
+            "required": true,
+            "type": "string",
+            "description": "Spotify URI, e.g. spotify:track:...",
+            "default": "spotify:track:3DjBDQs8ebkxMBo2V8V3SH"
+          }
+        ]
+      }
+    },
+    "/{room}/napster/{action}/{item}": {
+      "get": {
+        "tags": [
+          "room"
+        ],
+        "summary": "Queue or play a Napster song or album",
+        "operationId": "napster",
+        "responses": {
+          "default": {
+            "description": "success"
+          }
+        },
+        "parameters": [
+          {
+            "in": "path",
+            "name": "room",
+            "required": true,
+            "type": "string",
+            "description": "Sonos room name, URL-encoded if needed",
+            "default": "Living Room"
+          },
+          {
+            "in": "path",
+            "name": "action",
+            "required": true,
+            "type": "string",
+            "description": "queue, now or next",
+            "default": "queue"
+          },
+          {
+            "in": "path",
+            "name": "item",
+            "required": true,
+            "type": "string",
+            "description": "Type-prefixed item, e.g. song:12345 or album:67890",
+            "default": "song:12345"
+          }
+        ]
+      }
+    },
+    "/{room}/aldilifemusic/{action}/{item}": {
+      "get": {
+        "tags": [
+          "room"
+        ],
+        "summary": "Queue or play an ALDI life music song or album",
+        "operationId": "aldiLifeMusic",
+        "responses": {
+          "default": {
+            "description": "success"
+          }
+        },
+        "parameters": [
+          {
+            "in": "path",
+            "name": "room",
+            "required": true,
+            "type": "string",
+            "description": "Sonos room name, URL-encoded if needed",
+            "default": "Living Room"
+          },
+          {
+            "in": "path",
+            "name": "action",
+            "required": true,
+            "type": "string",
+            "description": "queue, now or next",
+            "default": "queue"
+          },
+          {
+            "in": "path",
+            "name": "item",
+            "required": true,
+            "type": "string",
+            "description": "Type-prefixed item, e.g. song:12345 or album:67890",
+            "default": "song:12345"
+          }
+        ]
+      }
+    },
+    "/{room}/amazonmusic/{action}/{item}": {
+      "get": {
+        "tags": [
+          "room"
+        ],
+        "summary": "Queue or play an Amazon Music song or album",
+        "operationId": "amazonMusic",
+        "responses": {
+          "default": {
+            "description": "success"
+          }
+        },
+        "parameters": [
+          {
+            "in": "path",
+            "name": "room",
+            "required": true,
+            "type": "string",
+            "description": "Sonos room name, URL-encoded if needed",
+            "default": "Living Room"
+          },
+          {
+            "in": "path",
+            "name": "action",
+            "required": true,
+            "type": "string",
+            "description": "queue, now or next",
+            "default": "queue"
+          },
+          {
+            "in": "path",
+            "name": "item",
+            "required": true,
+            "type": "string",
+            "description": "Type-prefixed item, e.g. song:12345 or album:67890",
+            "default": "song:12345"
+          }
+        ]
+      }
+    },
+    "/{room}/applemusic/{action}/{item}": {
+      "get": {
+        "tags": [
+          "room"
+        ],
+        "summary": "Queue or play an Apple Music song, album or playlist",
+        "operationId": "appleMusic",
+        "responses": {
+          "default": {
+            "description": "success"
+          }
+        },
+        "parameters": [
+          {
+            "in": "path",
+            "name": "room",
+            "required": true,
+            "type": "string",
+            "description": "Sonos room name, URL-encoded if needed",
+            "default": "Living Room"
+          },
+          {
+            "in": "path",
+            "name": "action",
+            "required": true,
+            "type": "string",
+            "description": "queue, now or next",
+            "default": "queue"
+          },
+          {
+            "in": "path",
+            "name": "item",
+            "required": true,
+            "type": "string",
+            "description": "Type-prefixed item, e.g. song:..., album:... or playlist:...",
+            "default": "song:12345"
+          }
+        ]
+      }
+    },
+    "/{room}/musicsearch/{service}/{type}/{term}": {
+      "get": {
+        "tags": [
+          "room"
+        ],
+        "summary": "Search a music service or local library and play the result",
+        "operationId": "musicSearch",
+        "responses": {
+          "default": {
+            "description": "success"
+          }
+        },
+        "parameters": [
+          {
+            "in": "path",
+            "name": "room",
+            "required": true,
+            "type": "string",
+            "description": "Sonos room name, URL-encoded if needed",
+            "default": "Living Room"
+          },
+          {
+            "in": "path",
+            "name": "service",
+            "required": true,
+            "type": "string",
+            "description": "apple, spotify, deezer, elite or library",
+            "default": "spotify"
+          },
+          {
+            "in": "path",
+            "name": "type",
+            "required": true,
+            "type": "string",
+            "description": "song, album, station, load or playlist",
+            "default": "song"
+          },
+          {
+            "in": "path",
+            "name": "term",
+            "required": true,
+            "type": "string",
+            "description": "Search term or library command",
+            "default": "artist:Adele track:Hello"
+          }
+        ],
+        "description": "This is one of the most flexible and complex endpoints in the API."
+      }
+    },
+    "/{room}/preset/{preset}": {
+      "get": {
+        "tags": [
+          "room"
+        ],
+        "summary": "Apply a preset using a room context",
+        "operationId": "presetRoom",
+        "responses": {
+          "default": {
+            "description": "success"
+          }
+        },
+        "parameters": [
+          {
+            "in": "path",
+            "name": "room",
+            "required": true,
+            "type": "string",
+            "description": "Sonos room name, URL-encoded if needed",
+            "default": "Living Room"
+          },
+          {
+            "in": "path",
+            "name": "preset",
+            "required": true,
+            "type": "string",
+            "description": "Preset name from presets/ or an inline JSON preset object",
+            "default": "example"
+          }
+        ]
+      }
+    },
+    "/{room}/{action}": {
+      "get": {
+        "tags": [
+          "generic"
+        ],
+        "summary": "Generic room action fallback",
+        "operationId": "roomActionFallback",
+        "responses": {
+          "default": {
+            "description": "success"
+          }
+        },
+        "parameters": [
+          {
+            "in": "path",
+            "name": "room",
+            "required": true,
+            "type": "string",
+            "description": "Sonos room name, URL-encoded if needed",
+            "default": "Living Room"
+          },
+          {
+            "in": "path",
+            "name": "action",
+            "required": true,
+            "type": "string",
+            "description": "Any registered room action name",
+            "default": "state"
+          }
+        ],
+        "description": "Fallback endpoint for actions not listed explicitly in the explorer."
+      }
+    },
+    "/{room}/{action}/{parameter}": {
+      "get": {
+        "tags": [
+          "generic"
+        ],
+        "summary": "Generic room action fallback with one parameter",
+        "operationId": "roomActionFallbackOneParameter",
+        "responses": {
+          "default": {
+            "description": "success"
+          }
+        },
+        "parameters": [
+          {
+            "in": "path",
+            "name": "room",
+            "required": true,
+            "type": "string",
+            "description": "Sonos room name, URL-encoded if needed",
+            "default": "Living Room"
+          },
+          {
+            "in": "path",
+            "name": "action",
+            "required": true,
+            "type": "string",
+            "description": "Any registered room action name",
+            "default": "volume"
+          },
+          {
+            "in": "path",
+            "name": "parameter",
+            "required": true,
+            "type": "string",
+            "description": "Action-specific parameter",
+            "default": "15"
+          }
+        ],
+        "description": "Fallback endpoint for actions not listed explicitly in the explorer."
+      }
+    },
+    "/{room}/{action}/{parameter1}/{parameter2}": {
+      "get": {
+        "tags": [
+          "generic"
+        ],
+        "summary": "Generic room action fallback with two parameters",
+        "operationId": "roomActionFallbackTwoParameters",
+        "responses": {
+          "default": {
+            "description": "success"
+          }
+        },
+        "parameters": [
+          {
+            "in": "path",
+            "name": "room",
+            "required": true,
+            "type": "string",
+            "description": "Sonos room name, URL-encoded if needed",
+            "default": "Living Room"
+          },
+          {
+            "in": "path",
+            "name": "action",
+            "required": true,
+            "type": "string",
+            "description": "Any registered room action name",
+            "default": "spotify"
+          },
+          {
+            "in": "path",
+            "name": "parameter1",
+            "required": true,
+            "type": "string",
+            "description": "First action-specific parameter",
+            "default": "queue"
+          },
+          {
+            "in": "path",
+            "name": "parameter2",
+            "required": true,
+            "type": "string",
+            "description": "Second action-specific parameter",
+            "default": "spotify:track:3DjBDQs8ebkxMBo2V8V3SH"
+          }
+        ],
+        "description": "Fallback endpoint for actions not listed explicitly in the explorer."
+      }
+    },
+    "/{room}/{action}/{parameter1}/{parameter2}/{parameter3}": {
+      "get": {
+        "tags": [
+          "generic"
+        ],
+        "summary": "Generic room action fallback with three parameters",
+        "operationId": "roomActionFallbackThreeParameters",
+        "responses": {
+          "default": {
+            "description": "success"
+          }
+        },
+        "parameters": [
+          {
+            "in": "path",
+            "name": "room",
+            "required": true,
+            "type": "string",
+            "description": "Sonos room name, URL-encoded if needed",
+            "default": "Living Room"
+          },
+          {
+            "in": "path",
+            "name": "action",
+            "required": true,
+            "type": "string",
+            "description": "Any registered room action name",
+            "default": "musicsearch"
+          },
+          {
+            "in": "path",
+            "name": "parameter1",
+            "required": true,
+            "type": "string",
+            "description": "First action-specific parameter",
+            "default": "spotify"
+          },
+          {
+            "in": "path",
+            "name": "parameter2",
+            "required": true,
+            "type": "string",
+            "description": "Second action-specific parameter",
+            "default": "song"
+          },
+          {
+            "in": "path",
+            "name": "parameter3",
+            "required": true,
+            "type": "string",
+            "description": "Third action-specific parameter",
+            "default": "artist:Adele track:Hello"
+          }
+        ],
+        "description": "Fallback endpoint for actions not listed explicitly in the explorer."
+      }
+    },
+    "/pauseall": {
+      "get": {
+        "tags": [
+          "system"
+        ],
+        "summary": "Pause every playing zone immediately",
+        "operationId": "pauseAllNow",
+        "responses": {
+          "default": {
+            "description": "success"
+          }
+        }
+      }
+    },
+    "/resumeall": {
+      "get": {
+        "tags": [
+          "system"
+        ],
+        "summary": "Resume all zones paused via pauseall immediately",
+        "operationId": "resumeAllNow",
+        "responses": {
+          "default": {
+            "description": "success"
+          }
+        }
+      }
+    },
+    "/services": {
+      "get": {
+        "tags": [
+          "system"
+        ],
+        "summary": "List available Sonos services for the current system context",
+        "operationId": "servicesGlobal",
+        "responses": {
+          "default": {
+            "description": "success"
+          }
+        }
+      }
+    },
+    "/favorites": {
+      "get": {
+        "tags": [
+          "system"
+        ],
+        "summary": "List Sonos favorites without specifying a room",
+        "operationId": "favoritesGlobal",
+        "responses": {
+          "default": {
+            "description": "success"
+          }
+        }
+      }
+    },
+    "/favorites/{detail}": {
+      "get": {
+        "tags": [
+          "system"
+        ],
+        "summary": "List Sonos favorites without specifying a room, optionally detailed",
+        "operationId": "favoritesGlobalDetailed",
+        "responses": {
+          "default": {
+            "description": "success"
+          }
+        },
+        "parameters": [
+          {
+            "in": "path",
+            "name": "detail",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Use detailed to return the full favorite objects",
+            "example": "detailed"
+          }
+        ]
+      }
+    },
+    "/favourites": {
+      "get": {
+        "tags": [
+          "system"
+        ],
+        "summary": "List Sonos favorites without specifying a room",
+        "operationId": "favouritesGlobal",
+        "responses": {
+          "default": {
+            "description": "success"
+          }
+        }
+      }
+    },
+    "/favourites/{detail}": {
+      "get": {
+        "tags": [
+          "system"
+        ],
+        "summary": "List Sonos favorites without specifying a room, optionally detailed",
+        "operationId": "favouritesGlobalDetailed",
+        "responses": {
+          "default": {
+            "description": "success"
+          }
+        },
+        "parameters": [
+          {
+            "in": "path",
+            "name": "detail",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Use detailed to return the full favorite objects",
+            "example": "detailed"
+          }
+        ]
+      }
+    },
+    "/playlists": {
+      "get": {
+        "tags": [
+          "system"
+        ],
+        "summary": "List Sonos saved queues/playlists without specifying a room",
+        "operationId": "playlistsGlobal",
+        "responses": {
+          "default": {
+            "description": "success"
+          }
+        }
+      }
+    },
+    "/playlists/{detail}": {
+      "get": {
+        "tags": [
+          "system"
+        ],
+        "summary": "List Sonos saved queues/playlists without specifying a room, optionally detailed",
+        "operationId": "playlistsGlobalDetailed",
+        "responses": {
+          "default": {
+            "description": "success"
+          }
+        },
+        "parameters": [
+          {
+            "in": "path",
+            "name": "detail",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Use detailed to return the full playlist objects",
+            "example": "detailed"
+          }
+        ]
+      }
+    },
+    "/state": {
+      "get": {
+        "tags": [
+          "system"
+        ],
+        "summary": "Get the current state of any available player",
+        "operationId": "stateGlobal",
+        "responses": {
+          "default": {
+            "description": "success"
+          }
+        }
+      }
+    },
+    "/debug": {
+      "get": {
+        "tags": [
+          "system"
+        ],
+        "summary": "Return discovery/player debug details without specifying a room",
+        "operationId": "debugGlobal",
+        "responses": {
+          "default": {
+            "description": "success"
+          }
+        }
+      }
+    },
+    "/{action}": {
+      "get": {
+        "tags": [
+          "generic"
+        ],
+        "summary": "Generic global action fallback",
+        "operationId": "globalActionFallback",
+        "responses": {
+          "default": {
+            "description": "success"
+          }
+        },
+        "parameters": [
+          {
+            "in": "path",
+            "name": "action",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Any registered global action name",
+            "example": "zones"
+          }
+        ],
+        "description": "Fallback endpoint for actions that do not need a room parameter."
+      }
+    },
+    "/{action}/{parameter}": {
+      "get": {
+        "tags": [
+          "generic"
+        ],
+        "summary": "Generic global action fallback with one parameter",
+        "operationId": "globalActionFallbackOneParameter",
+        "responses": {
+          "default": {
+            "description": "success"
+          }
+        },
+        "parameters": [
+          {
+            "in": "path",
+            "name": "action",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Any registered global action name",
+            "example": "favorites"
+          },
+          {
+            "in": "path",
+            "name": "parameter",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Action-specific parameter",
+            "example": "detailed"
+          }
+        ],
+        "description": "Fallback endpoint for actions that do not need a room parameter."
+      }
+    },
+    "/{action}/{parameter1}/{parameter2}": {
+      "get": {
+        "tags": [
+          "generic"
+        ],
+        "summary": "Generic global action fallback with two parameters",
+        "operationId": "globalActionFallbackTwoParameters",
+        "responses": {
+          "default": {
+            "description": "success"
+          }
+        },
+        "parameters": [
+          {
+            "in": "path",
+            "name": "action",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Any registered global action name",
+            "example": "presetplay"
+          },
+          {
+            "in": "path",
+            "name": "parameter1",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "First action-specific parameter",
+            "example": "example"
+          },
+          {
+            "in": "path",
+            "name": "parameter2",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Second action-specific parameter",
+            "example": "BBC Radio 6"
+          }
+        ],
+        "description": "Fallback endpoint for actions that do not need a room parameter."
+      }
+    },
+    "/{action}/{parameter1}/{parameter2}/{parameter3}": {
+      "get": {
+        "tags": [
+          "generic"
+        ],
+        "summary": "Generic global action fallback with three parameters",
+        "operationId": "globalActionFallbackThreeParameters",
+        "responses": {
+          "default": {
+            "description": "success"
+          }
+        },
+        "parameters": [
+          {
+            "in": "path",
+            "name": "action",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Any registered global action name",
+            "example": "presetplay"
+          },
+          {
+            "in": "path",
+            "name": "parameter1",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "First action-specific parameter",
+            "example": "example"
+          },
+          {
+            "in": "path",
+            "name": "parameter2",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Second action-specific parameter",
+            "example": "Road Trip"
+          },
+          {
+            "in": "path",
+            "name": "parameter3",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Third action-specific parameter",
+            "example": "plist"
+          }
+        ],
+        "description": "Fallback endpoint for actions that do not need a room parameter."
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "GroupState": {
+        "properties": {
+          "volume": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "mute": {
+            "type": "boolean"
+          }
+        }
+      },
+      "Track": {
+        "properties": {
+          "artist": {
+            "type": "string"
+          },
+          "title": {
+            "type": "string"
+          },
+          "album": {
+            "type": "string"
+          },
+          "albumArtURI": {
+            "type": "string"
+          },
+          "duration": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "uri": {
+            "type": "string"
+          }
+        }
+      },
+      "PlayMode": {
+        "properties": {
+          "shuffle": {
+            "type": "boolean"
+          },
+          "repeat": {
+            "type": "string"
+          },
+          "crossfade": {
+            "type": "boolean"
+          }
+        }
+      },
+      "State": {
+        "properties": {
+          "currentTrack": {
+            "$ref": "#/components/schemas/Track"
+          },
+          "nextTrack": {
+            "$ref": "#/components/schemas/Track"
+          },
+          "volume": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "mute": {
+            "type": "boolean"
+          },
+          "trackNo": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "elapsedTime": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "elapsedTimeFormatted": {
+            "type": "string"
+          },
+          "playbackState": {
+            "type": "string"
+          },
+          "playMode": {
+            "$ref": "#/components/schemas/PlayMode"
+          }
+        }
+      },
+      "Player": {
+        "properties": {
+          "uuid": {
+            "type": "string"
+          },
+          "state": {
+            "$ref": "#/components/schemas/State"
+          },
+          "roomName": {
+            "type": "string"
+          },
+          "coordinator": {
+            "type": "string"
+          },
+          "groupState": {
+            "$ref": "#/components/schemas/GroupState"
+          }
+        }
+      },
+      "Zone": {
+        "description": "A single Sonos zone",
+        "properties": {
+          "uuid": {
+            "type": "string",
+            "description": "Unique identifier for the zone coordinator"
+          },
+          "coordinator": {
+            "$ref": "#/components/schemas/Player"
+          },
+          "members": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Player"
+            }
+          }
+        }
+      }
+    }
+  }
+}

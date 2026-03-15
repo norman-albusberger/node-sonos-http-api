@@ -16,50 +16,48 @@ const api = new SonosHttpAPI(discovery, settings);
 const setupMQTT = require('./lib/mqttHandler.js');
 const setupTextInputSync = require('./lib/textInputSyncHandler.js');
 
-var requestHandler = function (req, res) {
-    req.addListener('end', function () {
-        serve(req, res, function (err) {
+function requestHandler(req, res) {
+    serve(req, res, () => {
 
-            // If error, route it.
-            // This bypasses authentication on static files!
-            //if (!err) {
-            //  return;
-            //}
+        // If error, route it.
+        // This bypasses authentication on static files!
+        //if (!err) {
+        //  return;
+        //}
 
-            if (settings.auth) {
-                var credentials = auth(req);
+        if (settings.auth) {
+            const credentials = auth(req);
 
-                if (!credentials || credentials.name !== settings.auth.username || credentials.pass !== settings.auth.password) {
-                    res.statusCode = 401;
-                    res.setHeader('WWW-Authenticate', 'Basic realm="Access Denied"');
-                    res.end('Access denied');
-                    return;
-                }
-            }
-
-            // Enable CORS requests
-            res.setHeader('Access-Control-Allow-Methods', 'POST, GET, OPTIONS');
-            res.setHeader('Access-Control-Allow-Origin', '*');
-            if (req.headers['access-control-request-headers']) {
-                res.setHeader('Access-Control-Allow-Headers', req.headers['access-control-request-headers']);
-            }
-
-            if (req.method === 'OPTIONS') {
-                res.end();
+            if (!credentials || credentials.name !== settings.auth.username || credentials.pass !== settings.auth.password) {
+                res.statusCode = 401;
+                res.setHeader('WWW-Authenticate', 'Basic realm="Access Denied"');
+                res.end('Access denied');
                 return;
             }
+        }
 
-            if (req.method === 'GET') {
-                api.requestHandler(req, res);
-            }
-        });
-    }).resume();
-};
+        // Enable CORS requests
+        res.setHeader('Access-Control-Allow-Methods', 'POST, GET, OPTIONS');
+        res.setHeader('Access-Control-Allow-Origin', '*');
+        if (req.headers['access-control-request-headers']) {
+            res.setHeader('Access-Control-Allow-Headers', req.headers['access-control-request-headers']);
+        }
+
+        if (req.method === 'OPTIONS') {
+            res.end();
+            return;
+        }
+
+        if (req.method === 'GET') {
+            api.requestHandler(req, res);
+        }
+    });
+}
 
 let server;
 
 if (settings.https) {
-    var options = {};
+    const options = {};
     if (settings.https.pfx) {
         options.pfx = fs.readFileSync(settings.https.pfx);
         options.passphrase = settings.https.passphrase;
@@ -83,7 +81,7 @@ process.on('unhandledRejection', (err) => {
     logger.error(err);
 });
 
-let host = settings.ip;
+const host = settings.ip;
 server.listen(settings.port, host, function () {
     logger.info('http server listening on', host, 'port', settings.port);
 });
