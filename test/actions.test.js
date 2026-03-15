@@ -274,3 +274,31 @@ test('musicsearch delegates library load requests immediately', async () => {
     libraryDef.nolib = originalNoLib;
   }
 });
+
+test('debug exposes TTS runtime info for docs and diagnostics', async () => {
+  const actions = loadActions(require('../lib/actions/debug'));
+
+  const player = {
+    system: {
+      localEndpoint: '127.0.0.1',
+      availableServices: [],
+      players: []
+    }
+  };
+
+  const result = await actions.get('debug')(player, ['tts']);
+
+  assert.equal(result.announceVolume, 40);
+  assert.equal(result.endpoints.say, '/{room}/say/{text}[/{voiceOrLanguageOrVolume}][/{volume}]');
+  assert.deepEqual(result.providerResolutionOrder, [
+    'aws-polly',
+    'elevenlabs',
+    'mac-os',
+    'microsoft',
+    'voicerss',
+    'google'
+  ]);
+  assert.ok(result.activeProviders.length >= 1);
+  assert.ok(result.activeProviders.some((provider) => provider.id === 'google'));
+  assert.equal(result.preferredProvider.id, result.activeProviders[0].id);
+});

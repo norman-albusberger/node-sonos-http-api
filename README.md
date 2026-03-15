@@ -1,37 +1,45 @@
 ⚠WARNING!⚠
 
-The Sonos S2 update, released June 2020, still works with this API. However, it might break in the future if and when Sonos decide to drop UPnP as the control protocol. 
+The Sonos S2 update, released June 2020, still works with this API. However, it might break in the future if and when Sonos decide to drop UPnP as the control protocol.
 
+This repository now supports **Node 22 LTS** and **Node 24 LTS** while keeping the existing HTTP API contract stable. The app has automated tests for core routing and high-traffic actions, plus local smoke-test coverage against a real Sonos system.
 
 Feel free to use it as you please. Consider donating if you want to support further development. Reach out on the gitter chat if you have issues getting it to run, instead of creating new issues, thank you!
 
-If you are also looking for cloud control (ifttt, public webhooks etc), see the [bronos-client](http://www.bronos.net) project! That pi image also contains an installation of this http-api.  
+If you are also looking for cloud control (ifttt, public webhooks etc), see the [bronos-client](http://www.bronos.net) project! That pi image also contains an installation of this http-api.
 
 SONOS HTTP API
 ==============
 
-** Beta is no more, master is up to date with the beta now! **
-
 **Recommended runtime: Node 24 LTS**
 
-**Important:** the public HTTP API is being kept stable, but the underlying `sonos-discovery` dependency still comes from an older Node 4-era codebase. In practice the app now has automated tests and local smoke-test coverage on modern Node, but dependency modernization is still in progress.
+**Compatible runtimes:** Node 22 LTS and Node 24 LTS
+
+**Important:** the public HTTP API is being kept stable, but the underlying `sonos-discovery` layer is a vendored fork of an older codebase. It now runs on Node 22 and Node 24 in this repository, but internal cleanup is still ongoing.
 
 A simple http based API for controlling your Sonos system.
 
-There is a simple sandbox at /docs (incomplete atm)
+Interactive API docs are available at `/docs`.
+Open them through the running API, for example: `http://localhost:5005/docs`
 
 USAGE
 -----
 
-Start by fixing your dependencies. Use Node 24 LTS, then invoke:
+Use Node 22 LTS or Node 24 LTS, then install dependencies:
 
-`npm install --production`
+`npm install`
 
-This will download the necessary dependencies if possible.
-
-start the server by running
+Start the server:
 
 `npm start`
+
+Run the automated test suite:
+
+`npm test`
+
+Optional during development:
+
+`npm run dev`
 
 Now you can control your system by invoking the following commands:
 
@@ -66,6 +74,29 @@ Example:
 
 `http://localhost:5005/living room/repeat/on`
 (will turn on repeat mode for group)
+
+
+Docs
+----
+
+The `/docs` route serves a Scalar-based API reference built from `static/docs/api-docs.json`.
+
+- Use `http://localhost:5005/docs` when you want to test requests against the running API.
+- If you open `static/docs/index.html` directly from an IDE web server, "Try it out" requests will target that server unless you adjust the OpenAPI `servers` entry.
+
+
+Testing
+-------
+
+The repository includes automated tests for:
+
+- core HTTP routing
+- common action modules such as `playpause`, `favorite`, `favorites`, `playlist`, `queue`, `bass`, `treble` and `join`
+- helper paths such as fetch-based HTTP calls, AWS Polly synthesis and favorites/playlists cache behavior
+
+Run them with:
+
+`npm test`
 
 
 The actions supported as of today:

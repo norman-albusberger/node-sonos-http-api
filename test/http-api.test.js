@@ -436,3 +436,23 @@ test('routes playlist, favorite and favorites endpoints with stable response sha
 
   restore();
 });
+
+test('routes debug tts endpoint with runtime provider info', async () => {
+  const restore = installActualActionsStub([
+    require.resolve('../lib/actions/debug')
+  ]);
+  const { discovery } = createDiscovery();
+  const HttpAPI = require('../lib/sonos-http-api');
+  const api = new HttpAPI(discovery, { port: 5005 });
+
+  const res = await invokeRequest(api, '/debug/tts');
+  const body = JSON.parse(res.body);
+
+  assert.equal(res.statusCode, 200);
+  assert.equal(body.announceVolume, 40);
+  assert.ok(body.activeProviders.length >= 1);
+  assert.equal(body.preferredProvider.id, body.activeProviders[0].id);
+  assert.equal(body.parameterRules.thirdSegment, 'For say and sayall, the third segment is always treated as volume when present.');
+
+  restore();
+});

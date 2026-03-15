@@ -405,9 +405,10 @@
     "/sayall/{text}": {
       "get": {
         "tags": [
-          "system"
+          "system",
+          "tts"
         ],
-        "summary": "Create TTS and play it on all players",
+        "summary": "Create TTS and play it on all players using the active provider",
         "operationId": "sayAll",
         "responses": {
           "default": {
@@ -429,9 +430,10 @@
     "/sayall/{text}/{volumeOrLanguage}": {
       "get": {
         "tags": [
-          "system"
+          "system",
+          "tts"
         ],
-        "summary": "Create TTS and play it on all players with volume or language",
+        "summary": "Create TTS and play it on all players with volume or provider-specific voice/language",
         "operationId": "sayAllVolumeOrLanguage",
         "responses": {
           "default": {
@@ -452,8 +454,8 @@
             "name": "volumeOrLanguage",
             "required": true,
             "type": "string",
-            "description": "Numeric volume or language/voice code",
-            "default": "35"
+            "description": "Use /debug/tts first to see which provider is active. This segment is treated as volume when numeric, otherwise it is forwarded to the provider as a language code, voice name or voiceId.",
+            "default": "Joanna"
           }
         ]
       }
@@ -461,9 +463,10 @@
     "/sayall/{text}/{language}/{volume}": {
       "get": {
         "tags": [
-          "system"
+          "system",
+          "tts"
         ],
-        "summary": "Create TTS and play it on all players with language and volume",
+        "summary": "Create TTS and play it on all players with provider-specific voice/language and explicit volume",
         "operationId": "sayAllLanguageAndVolume",
         "responses": {
           "default": {
@@ -484,8 +487,8 @@
             "name": "language",
             "required": true,
             "type": "string",
-            "description": "Language or voice code",
-            "default": "de"
+            "description": "Provider-specific language code, voice name or voiceId. Use /debug/tts first to see how the active provider interprets this parameter.",
+            "default": "Joanna"
           },
           {
             "in": "path",
@@ -501,9 +504,10 @@
     "/saypreset/{preset}/{text}": {
       "get": {
         "tags": [
-          "system"
+          "system",
+          "tts"
         ],
-        "summary": "Create TTS and play it on a preset-defined group",
+        "summary": "Create TTS and play it on a preset-defined group using the active provider",
         "operationId": "sayPreset",
         "responses": {
           "default": {
@@ -533,9 +537,10 @@
     "/saypreset/{preset}/{text}/{language}": {
       "get": {
         "tags": [
-          "system"
+          "system",
+          "tts"
         ],
-        "summary": "Create TTS and play it on a preset-defined group with an explicit language",
+        "summary": "Create TTS and play it on a preset-defined group with provider-specific voice/language",
         "operationId": "sayPresetWithLanguage",
         "responses": {
           "default": {
@@ -564,8 +569,8 @@
             "name": "language",
             "required": true,
             "type": "string",
-            "description": "Language or voice code",
-            "default": "de"
+            "description": "Provider-specific language code, voice name or voiceId. Use /debug/tts first to see how the active provider interprets this parameter.",
+            "default": "Joanna"
           }
         ]
       }
@@ -2086,9 +2091,10 @@
     "/{room}/say/{text}": {
       "get": {
         "tags": [
-          "room"
+          "room",
+          "tts"
         ],
-        "summary": "Create TTS and play it on a single player",
+        "summary": "Create TTS and play it using the active provider",
         "operationId": "say",
         "responses": {
           "default": {
@@ -2118,9 +2124,10 @@
     "/{room}/say/{text}/{volumeOrLanguage}": {
       "get": {
         "tags": [
-          "room"
+          "room",
+          "tts"
         ],
-        "summary": "Create TTS and play it with volume or language",
+        "summary": "Create TTS and play it with volume or provider-specific voice/language",
         "operationId": "sayVolumeOrLanguage",
         "responses": {
           "default": {
@@ -2149,8 +2156,8 @@
             "name": "volumeOrLanguage",
             "required": true,
             "type": "string",
-            "description": "Numeric volume or language/voice code",
-            "default": "35"
+            "description": "Use /debug/tts first to see which provider is active. This segment is treated as volume when numeric, otherwise it is forwarded to the provider as a language code, voice name or voiceId.",
+            "default": "Joanna"
           }
         ]
       }
@@ -2158,9 +2165,10 @@
     "/{room}/say/{text}/{language}/{volume}": {
       "get": {
         "tags": [
-          "room"
+          "room",
+          "tts"
         ],
-        "summary": "Create TTS and play it with language and volume",
+        "summary": "Create TTS and play it with provider-specific voice/language and explicit volume",
         "operationId": "sayLanguageAndVolume",
         "responses": {
           "default": {
@@ -2189,8 +2197,8 @@
             "name": "language",
             "required": true,
             "type": "string",
-            "description": "Language or voice code",
-            "default": "de"
+            "description": "Provider-specific language code, voice name or voiceId. Use /debug/tts first to see how the active provider interprets this parameter.",
+            "default": "Joanna"
           },
           {
             "in": "path",
@@ -2390,9 +2398,10 @@
     "/{room}/saypreset/{preset}/{text}": {
       "get": {
         "tags": [
-          "room"
+          "room",
+          "tts"
         ],
-        "summary": "Create TTS and play it on a preset-defined player group",
+        "summary": "Create TTS and play it on a preset-defined player group using the active provider",
         "operationId": "sayPresetRoom",
         "responses": {
           "default": {
@@ -2430,9 +2439,10 @@
     "/{room}/saypreset/{preset}/{text}/{language}": {
       "get": {
         "tags": [
-          "room"
+          "room",
+          "tts"
         ],
-        "summary": "Create TTS and play it on a preset-defined player group with language",
+        "summary": "Create TTS and play it on a preset-defined player group with provider-specific voice/language",
         "operationId": "sayPresetRoomWithLanguage",
         "responses": {
           "default": {
@@ -2469,8 +2479,8 @@
             "name": "language",
             "required": true,
             "type": "string",
-            "description": "Language or voice code",
-            "default": "de"
+            "description": "Provider-specific language code, voice name or voiceId. Use /debug/tts first to see how the active provider interprets this parameter.",
+            "default": "Joanna"
           }
         ]
       }
@@ -3476,6 +3486,46 @@
           }
         ],
         "description": "Fallback endpoint for actions that do not need a room parameter."
+      }
+    },
+    "/debug/tts": {
+      "get": {
+        "tags": [
+          "system",
+          "tts"
+        ],
+        "summary": "Return active TTS provider info and parameter rules",
+        "operationId": "debugTtsGlobal",
+        "responses": {
+          "default": {
+            "description": "success"
+          }
+        }
+      }
+    },
+    "/{room}/debug/tts": {
+      "get": {
+        "tags": [
+          "room",
+          "tts"
+        ],
+        "summary": "Return active TTS provider info and parameter rules",
+        "operationId": "debugTts",
+        "responses": {
+          "default": {
+            "description": "success"
+          }
+        },
+        "parameters": [
+          {
+            "in": "path",
+            "name": "room",
+            "required": true,
+            "type": "string",
+            "description": "Sonos room name, URL-encoded if needed",
+            "default": "Living Room"
+          }
+        ]
       }
     }
   },
