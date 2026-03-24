@@ -123,6 +123,41 @@ test('aws polly synthesizes audio with the modular SDK client', async () => {
   }
 });
 
+test('aws polly writes generated audio to an explicit ttsDir and keeps the public uri stable', async () => {
+  const tempRoot = fs.mkdtempSync(path.join(os.tmpdir(), 'sonos-http-api-polly-custom-'));
+  const ttsDir = fs.mkdtempSync(path.join(os.tmpdir(), 'sonos-http-api-polly-custom-tts-'));
+
+  const loader = loadPollyWithStubs({
+    settings: {
+      webroot: tempRoot,
+      ttsDir,
+      aws: {
+        credentials: { region: 'eu-central-1' },
+        name: 'Joanna'
+      }
+    },
+    fileDuration: () => Promise.resolve(1234),
+    sendImpl: () => Promise.resolve({
+      AudioStream: {
+        transformToByteArray: () => Promise.resolve(Uint8Array.from([4, 3, 2, 1]))
+      }
+    })
+  });
+
+  try {
+    const result = await loader.polly('outside webroot');
+
+    assert.equal(loader.state.sendCalls, 1);
+    assert.match(result.uri, /^\/tts\/polly-[a-f0-9]+-Joanna\.mp3$/);
+    assert.equal(fs.existsSync(path.join(ttsDir, path.basename(result.uri))), true);
+    assert.equal(fs.existsSync(path.join(tempRoot, result.uri)), false);
+  } finally {
+    loader.restore();
+    fs.rmSync(tempRoot, { recursive: true, force: true });
+    fs.rmSync(ttsDir, { recursive: true, force: true });
+  }
+});
+
 test('aws polly reuses an existing cached audio file', async () => {
   const tempRoot = fs.mkdtempSync(path.join(os.tmpdir(), 'sonos-http-api-polly-cache-'));
   const ttsDir = path.join(tempRoot, 'tts');

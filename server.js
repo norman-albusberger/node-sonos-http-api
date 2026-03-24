@@ -8,8 +8,11 @@ const logger = require('sonos-discovery/lib/helpers/logger');
 const SonosHttpAPI = require('./lib/sonos-http-api.js');
 const serveStatic = require('serve-static');
 const settings = require('./settings');
+const { TTS_ROUTE_PREFIX } = require('./lib/helpers/tts-paths');
+const serveMountedStatic = require('./lib/helpers/serve-mounted-static');
 
 const serve = new serveStatic(settings.webroot);
+const serveTts = new serveStatic(settings.ttsDir);
 const discovery = new SonosSystem(settings);
 const api = new SonosHttpAPI(discovery, settings);
 
@@ -17,7 +20,8 @@ const setupMQTT = require('./lib/mqttHandler.js');
 const setupTextInputSync = require('./lib/textInputSyncHandler.js');
 
 function requestHandler(req, res) {
-    serve(req, res, () => {
+    serveMountedStatic(TTS_ROUTE_PREFIX, serveTts, req, res, () => {
+      serve(req, res, () => {
 
         // If error, route it.
         // This bypasses authentication on static files!
@@ -51,6 +55,7 @@ function requestHandler(req, res) {
         if (req.method === 'GET') {
             api.requestHandler(req, res);
         }
+      });
     });
 }
 

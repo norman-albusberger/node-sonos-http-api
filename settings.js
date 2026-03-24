@@ -3,6 +3,7 @@ const fs = require('fs');
 const path = require('path');
 const logger = require('sonos-discovery/lib/helpers/logger');
 const tryLoadJson = require('./lib/helpers/try-load-json');
+const { getTtsDir } = require('./lib/helpers/tts-paths');
 
 
 function merge(target, source) {
@@ -35,10 +36,10 @@ const settingsFileFullPath = process.env.SETTINGS_PATH || path.resolve(__dirname
 const userSettings = tryLoadJson(settingsFileFullPath);
 merge(settings, userSettings);
 
-const ttsDir = path.join(settings.webroot, 'tts');
+settings.ttsDir = getTtsDir(settings);
 
-if (!fs.existsSync(ttsDir)) {
-    fs.mkdirSync(ttsDir, { recursive: true });
+if (!fs.existsSync(settings.ttsDir)) {
+    fs.mkdirSync(settings.ttsDir, { recursive: true });
 }
 
 if (!fs.existsSync(settings.cacheDir)) {
