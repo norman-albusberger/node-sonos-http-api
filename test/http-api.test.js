@@ -189,7 +189,12 @@ function createDiscovery() {
     { title: 'Morning Mix', uri: 'fav:1', metadata: 'meta-1' },
     { title: 'Evening Mix', uri: 'fav:2', metadata: 'meta-2' }
   ]);
+  livingRoom.system.getPlaylists = () => Promise.resolve([
+    { title: 'Road Trip', uri: 'playlist:1' },
+    { title: 'Focus Time', uri: 'playlist:2' }
+  ]);
   kitchen.system.getFavorites = livingRoom.system.getFavorites;
+  kitchen.system.getPlaylists = livingRoom.system.getPlaylists;
 
   discovery.zones = zones;
   discovery.getPlayer = (name) => [livingRoom, kitchen].find((player) => player.roomName.toLowerCase() === name.toLowerCase());
@@ -276,6 +281,28 @@ test('falls back to any player for global actions like /zones', async () => {
   assert.equal(res.statusCode, 200);
   assert.equal(body.length, 1);
   assert.equal(body[0].coordinator.roomName, 'Living Room');
+
+  restore();
+});
+
+test('routes global playlists through any player and preserves response shape', async () => {
+  const restore = installActualActionsStub([
+    require.resolve('../lib/actions/playlists')
+  ]);
+  const { discovery } = createDiscovery();
+  const HttpAPI = require('../lib/sonos-http-api');
+  const api = new HttpAPI(discovery, { port: 5005 });
+
+  const titlesRes = await invokeRequest(api, '/playlists');
+  assert.equal(titlesRes.statusCode, 200);
+  assert.deepEqual(JSON.parse(titlesRes.body), ['Road Trip', 'Focus Time']);
+
+  const detailedRes = await invokeRequest(api, '/playlists/detailed');
+  assert.equal(detailedRes.statusCode, 200);
+  assert.deepEqual(JSON.parse(detailedRes.body), [
+    { title: 'Road Trip', uri: 'playlist:1' },
+    { title: 'Focus Time', uri: 'playlist:2' }
+  ]);
 
   restore();
 });
@@ -401,9 +428,10 @@ test('routes real action modules for playpause, mute, equalizer, queue and join'
   restore();
 });
 
-test('routes playlist, favorite and favorites endpoints with stable response shapes', async () => {
+test('routes playlist, playlists, favorite and favorites endpoints with stable response shapes', async () => {
   const restore = installActualActionsStub([
     require.resolve('../lib/actions/playlist'),
+    require.resolve('../lib/actions/playlists'),
     require.resolve('../lib/actions/favorite'),
     require.resolve('../lib/actions/favorites')
   ]);
@@ -426,6 +454,17 @@ test('routes playlist, favorite and favorites endpoints with stable response sha
   const favouritesRes = await invokeRequest(api, '/Living%20Room/favourites');
   assert.equal(favouritesRes.statusCode, 200);
   assert.deepEqual(JSON.parse(favouritesRes.body), ['Morning Mix', 'Evening Mix']);
+
+  const playlistsRes = await invokeRequest(api, '/Living%20Room/playlists');
+  assert.equal(playlistsRes.statusCode, 200);
+  assert.deepEqual(JSON.parse(playlistsRes.body), ['Road Trip', 'Focus Time']);
+
+  const detailedPlaylistsRes = await invokeRequest(api, '/Living%20Room/playlists/detailed');
+  assert.equal(detailedPlaylistsRes.statusCode, 200);
+  assert.deepEqual(JSON.parse(detailedPlaylistsRes.body), [
+    { title: 'Road Trip', uri: 'playlist:1' },
+    { title: 'Focus Time', uri: 'playlist:2' }
+  ]);
 
   const detailedRes = await invokeRequest(api, '/Living%20Room/favorites/detailed');
   assert.equal(detailedRes.statusCode, 200);

@@ -238,6 +238,28 @@ test('favorites returns titles by default and full objects in detailed mode', as
   assert.deepEqual(favouritesAlias, ['Morning Mix', 'Evening Mix']);
 });
 
+test('playlists returns titles by default and full objects in detailed mode', async () => {
+  const actions = loadActions(require('../lib/actions/playlists'));
+  const playlists = [
+    { title: 'Road Trip', uri: 'playlist:1' },
+    { title: 'Focus Time', uri: 'playlist:2' }
+  ];
+
+  const player = {
+    system: {
+      getPlaylists() {
+        return Promise.resolve(playlists);
+      }
+    }
+  };
+
+  const titles = await actions.get('playlists')(player, []);
+  const detailed = await actions.get('playlists')(player, ['detailed']);
+
+  assert.deepEqual(titles, ['Road Trip', 'Focus Time']);
+  assert.deepEqual(detailed, playlists);
+});
+
 test('musicsearch rejects unsupported services and types', async () => {
   const actions = loadActions(require('../lib/actions/musicSearch'));
   const player = {
