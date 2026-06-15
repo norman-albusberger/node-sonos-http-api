@@ -307,6 +307,28 @@ test('routes global playlists through any player and preserves response shape', 
   restore();
 });
 
+test('routes global favorites and favourites alias through any player with stable response shapes', async () => {
+  const restore = installActualActionsStub([
+    require.resolve('../lib/actions/favorites')
+  ]);
+  const { discovery } = createDiscovery();
+  const HttpAPI = require('../lib/sonos-http-api');
+  const api = new HttpAPI(discovery, { port: 5005 });
+
+  const titlesRes = await invokeRequest(api, '/favorites');
+  assert.equal(titlesRes.statusCode, 200);
+  assert.deepEqual(JSON.parse(titlesRes.body), ['Morning Mix', 'Evening Mix']);
+
+  const detailedRes = await invokeRequest(api, '/favourites/detailed');
+  assert.equal(detailedRes.statusCode, 200);
+  assert.deepEqual(JSON.parse(detailedRes.body), [
+    { title: 'Morning Mix', uri: 'fav:1', metadata: 'meta-1' },
+    { title: 'Evening Mix', uri: 'fav:2', metadata: 'meta-2' }
+  ]);
+
+  restore();
+});
+
 test('keeps /events available as server-sent events endpoint', async () => {
   const restore = installRequireDirStub();
   const { discovery } = createDiscovery();
@@ -450,6 +472,12 @@ test('routes playlist, playlists, favorite and favorites endpoints with stable r
   assert.deepEqual(JSON.parse(favoriteRes.body), { status: 'success' });
   assert.equal(livingRoom.favoriteName, 'BBC Radio 6');
   assert.equal(livingRoom.playCalled, 2);
+
+  const favouriteAliasRes = await invokeRequest(api, '/Living%20Room/favourite/BBC%20Radio%204');
+  assert.equal(favouriteAliasRes.statusCode, 200);
+  assert.deepEqual(JSON.parse(favouriteAliasRes.body), { status: 'success' });
+  assert.equal(livingRoom.favoriteName, 'BBC Radio 4');
+  assert.equal(livingRoom.playCalled, 3);
 
   const favouritesRes = await invokeRequest(api, '/Living%20Room/favourites');
   assert.equal(favouritesRes.statusCode, 200);

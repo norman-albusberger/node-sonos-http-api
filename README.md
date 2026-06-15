@@ -383,10 +383,6 @@ Example:
 	  },
 	  "announceVolume": 40,
 	  "ttsDir": "/absolute/path/for/generated-tts-files",
-	  "pandora": {
-	    "username": "your-pandora-account-email-address",
-	    "password": "your-pandora-password"
-	  },
 	  "spotify": {
 	    "clientId": "your-spotify-application-clientId",
 	    "clientSecret": "your-spotify-application-clientSecret"
@@ -1020,28 +1016,6 @@ You can specify a SiriusXM channel number or station name and the station will b
 ```
 /RoomName/siriusXM/{channel number,station name}
 ```
-
-
-Pandora
-----------------------
-Perform a search for one of your Pandora stations and begin playing. Give the currently playing song a thumbs up or thumbs down. Requires a valid Pandora account and credentials.
-
-The following endpoints are available:
-
-```
-/RoomName/pandora/play/{station name}     Plays the closest match to the specified station name in your list of Pandora stations
-/RoomName/pandora/thumbsup                Gives the current playing Pandora song a thumbs up
-/RoomName/pandora/thumbsdown              Gives the current playing Pandora song a thumbs down
-```
-
-Your Pandora credentials need to be added to the settings.json file
-   ```
-          ,
-          "pandora": {
-            "username": "your-pandora-account-email-address",
-            "password": "your-pandora-password"
-          }
-  ```
 
 
 Tunein

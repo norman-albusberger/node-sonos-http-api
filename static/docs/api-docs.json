@@ -2597,46 +2597,6 @@
         ]
       }
     },
-    "/{room}/pandora/{action}/{value}": {
-      "get": {
-        "tags": [
-          "room"
-        ],
-        "summary": "Control Pandora playback or feedback",
-        "operationId": "pandora",
-        "responses": {
-          "default": {
-            "description": "success"
-          }
-        },
-        "parameters": [
-          {
-            "in": "path",
-            "name": "room",
-            "required": true,
-            "type": "string",
-            "description": "Sonos room name, URL-encoded if needed",
-            "default": "Living Room"
-          },
-          {
-            "in": "path",
-            "name": "action",
-            "required": true,
-            "type": "string",
-            "description": "play, thumbsup or thumbsdown",
-            "default": "play"
-          },
-          {
-            "in": "path",
-            "name": "value",
-            "required": true,
-            "type": "string",
-            "description": "Station search term or current-track feedback target",
-            "default": "Chill"
-          }
-        ]
-      }
-    },
     "/{room}/siriusxm/{query}": {
       "get": {
         "tags": [

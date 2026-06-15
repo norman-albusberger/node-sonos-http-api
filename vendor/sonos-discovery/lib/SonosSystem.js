@@ -10,6 +10,7 @@ const EventEmitter = require('events').EventEmitter;
 const soap = require('./helpers/soap');
 const parseServices = require('./helpers/parse-services');
 const UnknownServiceError = require('./errors/unknown-service');
+const listCache = require('./helpers/list-cache');
 const logger = require('./helpers/logger');
 
 function isVisible(member) {
@@ -211,49 +212,9 @@ SonosSystem.prototype.getServiceType = function getServiceType(serviceName) {
   return this.availableServices[serviceName].type;
 };
 
-SonosSystem.prototype._invalidateListCache = function invalidateListCache(type) {
-  if (!type) {
-    this._listCache = Object.create(null);
-    this._listCacheInflight = Object.create(null);
-    return;
-  }
+SonosSystem.prototype._invalidateListCache = listCache.invalidateListCache;
 
-  delete this._listCache[type];
-  delete this._listCacheInflight[type];
-};
-
-SonosSystem.prototype._getCachedList = function getCachedList(type, loader) {
-  if (!this._listCache) {
-    this._listCache = Object.create(null);
-  }
-
-  if (!this._listCacheInflight) {
-    this._listCacheInflight = Object.create(null);
-  }
-
-  if (this._listCache[type]) {
-    return Promise.resolve(this._listCache[type]);
-  }
-
-  if (this._listCacheInflight[type]) {
-    return this._listCacheInflight[type];
-  }
-
-  const loadPromise = Promise.resolve()
-    .then(loader)
-    .then((items) => {
-      this._listCache[type] = items;
-      delete this._listCacheInflight[type];
-      return items;
-    })
-    .catch((error) => {
-      delete this._listCacheInflight[type];
-      throw error;
-    });
-
-  this._listCacheInflight[type] = loadPromise;
-  return loadPromise;
-};
+SonosSystem.prototype._getCachedList = listCache.getCachedList;
 
 requireDir(path.join(__dirname, '/prototypes/SonosSystem'), (proto) => {
   SonosSystem.prototype[proto.name] = proto;
