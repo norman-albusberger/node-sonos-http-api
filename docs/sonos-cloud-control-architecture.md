@@ -4,6 +4,45 @@ Status: concept and decision record
 Date: 2026-06-15  
 Scope: Extend this fork of `node-sonos-http-api` with optional Sonos Cloud Control API support without breaking existing HTTP contracts for SonoX-Pro, SonoX-Music-Server, Loxone, and existing automations.
 
+## SonoX appliance decision summary (verified, June 2026)
+
+This summary was added after verifying the evaluation below against the official Sonos Control API documentation and the current local-API deprecation status. It is the product-level decision for the **SonoX appliance** (the LAN Sonos↔Loxone bridge). The detailed evaluation follows.
+
+### Scope that actually matters
+Only the endpoints SonoX exposes to Loxone need to be covered (`app/core/Sonox/endpoints.json`), not the full `node-sonos-http-api` surface. Mapped against the Cloud Control API namespaces:
+
+- **Cloud-mappable today (~90% of the Loxone set):** play / pause / playpause / next / previous (`playback`), player + group volume and mute (`playerVolume` / `groupVolume`), favorites + playlists (`favorites` / `playlists`), grouping add/join/leave/isolate/ungroup (`groups`), `/zones`, `/{room}/state`, `pauseall` / `resumeall`, and `presetplay` (orchestrated from primitives).
+- **Validate on real S2 hardware — the only core-feature risk:** clips and TTS announcements via `audioClip.loadAudioClip`. On the LAN the player can fetch the bridge's `http://<bridge-ip>:5005/(tts|clips)/…` URL; the clip ducks and auto-restores the current music. Caveats: a stereo pair plays on the left speaker only, "all"/group announcements require multiple fan-out calls (not perfectly synchronized), and the player must expose the `AUDIO_CLIP` capability.
+- **Emulate app-side:** sleep timer — there is no Cloud equivalent, so the bridge runs its own timer and calls `playback.pause`.
+- **Drop:** `/{room}/queue` and `/{room}/clearqueue` — no Cloud equivalent and not used by Loxone.
+- **Moot — SonoX never exposed these to Loxone:** EQ (bass/treble/loudness), volume lock, raw `setAVTransportURI`, generic music search, local music library, alarms. The Control API lacks all of these, but it does not matter for this use case.
+
+### Verified hard limits of the Cloud Control API
+- **Quota: 1,000 requests/minute per application** (shared across every customer and household), plus a 100 requests/second spike arrest. Sonos explicitly requires a subscribe/event model over polling. Per-device polling therefore does not scale across a fleet.
+- **Events require a publicly reachable HTTPS callback.** A LAN device behind NAT cannot receive Sonos cloud events directly; there is no event replay; subscriptions last at most three days.
+- **The Control API is a deliberate subset of the local UPnP API** (no local library, no alarms, no player settings).
+
+### Now-playing (the Loxone Text-Input-Sync feature)
+- **Today it is local UPnP eventing:** the speaker pushes state changes to the bridge's LAN callback — instant, no cloud, no quota. This is exactly how the official Sonos S2 app works on the LAN.
+- **In a cloud-only world** the bridge can still do it itself by polling `playbackMetadata.getMetadataStatus` (an outbound call that works through NAT) — fine for small numbers with a few seconds of latency. A hosted relay (a public callback that the bridge connects out to) is only required for instant updates at fleet scale, not on day one.
+
+### Local-API deprecation status (the actual risk)
+- Sonos is gradually deprecating the unofficial local UPnP control for S2 devices ("fewer features over time"), tied to an eventual end-of-life of the desktop controller apps. It is **not imminent, has no public timeline, and still works in 2026.**
+- The local control that the 2024 app backlash forced Sonos to restore protects the *Sonos app*, not the *third-party UPnP API* that SonoX relies on — those are separable, so "the app still works locally" is not a guarantee for SonoX.
+- **Watch signal:** when Sonos deprecates the desktop controller app, removal of UPnP from the speakers is the likely next step — raise the migration priority then.
+
+### User experience and latency (why a cloud-only Sonos is a downgrade)
+- Local SOAP/UPnP control is LAN-instant (~milliseconds). Every Cloud Control command is an internet round-trip, which is noticeably laggy for playback and volume, and worst for sliders (which are additionally rate-limited).
+- Loved local-only behaviours — sleep timer, instant now-playing, EQ, volume lock — degrade or disappear. For an automation bridge, a cloud-only Sonos is therefore a real UX regression: more latency and fewer features.
+- *(Likely rationale, speculative: Sonos is consolidating on a single account-bound, cloud-controlled surface for telemetry, lock-in, and to stop third parties reverse-engineering local control — shifting the UX cost onto users and integrators.)*
+
+### Decision
+1. **Keep local (UPnP/SOAP) as the primary path.** It is instant, feature-complete, and is what the official app uses on the LAN.
+2. **Build the provider abstraction now** (`LocalSonosProvider` default, a limited `CloudSonosProvider`) as a serious hedge — the deprecation is active, not hypothetical. Priority: medium.
+3. **Validate `audioClip` on real S2 hardware** — the only core-feature risk (announcement reachability, ducking/restore, group and stereo-pair behaviour).
+4. **Keep cloud-native concepts server-side** (OAuth, event relay, cloud queue in SonoX-Pro / a hosted relay) — do not force them into the LAN bridge.
+5. **No panic migration.** Re-prioritise when the desktop-app-deprecation watch signal fires.
+
 ## Executive decision
 
 For a commercial product, the recommended primary direction is Alternative B: implement a first-class Sonos Cloud integration in SonoX-Pro and/or SonoX-Music-Server, while keeping this `node-sonos-http-api` fork as the stable local LAN bridge and compatibility layer.
@@ -19,7 +58,7 @@ The safest target is therefore:
 - Let SonoX-Pro/SonoX-Music-Server own cloud-native product flows such as OAuth onboarding, multi-household selection, cloud queue management, playback sessions, and commercial-grade token/security handling.
 - Avoid unstable "fake compatibility" for queue, preset, notification, and event semantics where the cloud API differs materially.
 
-If Sonos removes local SOAP/UPnP control for S2 devices, the role of the cloud provider changes from "optional remote feature" to "required S2 survival path". This does not change the recommended product architecture, but it changes the priority: the provider abstraction must be introduced early so S1/local-capable devices can continue through `LocalSonosProvider`, while S2/cloud-only devices can fall back to `CloudSonosProvider` for cloud-supported operations.
+Sonos is gradually deprecating the unofficial local UPnP/SOAP control for S2 devices (verified June 2026 — see the SonoX summary above: fewer features over time, no public timeline, still working today). As that erodes, the role of the cloud provider shifts from "optional remote feature" toward "S2 survival path". This does not change the recommended product architecture, but it changes the priority: the provider abstraction must be introduced early so S1/local-capable devices can continue through `LocalSonosProvider`, while S2/cloud-only devices can fall back to `CloudSonosProvider` for cloud-supported operations.
 
 ## SOAP end-of-life scenario for S2
 
