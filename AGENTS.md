@@ -72,6 +72,23 @@ This includes:
 - Keep `static/docs/api-docs.json` aligned with the current public API.
 - Prefer practical manual-testing documentation over perfect theoretical completeness.
 
+## Tagging And Versioning
+
+This repository is a fork. `package.json` still carries the upstream identity -
+`name: sonos-http-api`, `version: 1.6.9`, `repository: jishi/...` - so that
+number is **upstream's**, not this fork's.
+
+- Fork releases are tagged `sonox-1`, `sonox-2`, ... Plain counting, no SemVer
+  meaning, no collision with a version jishi can hand out himself.
+- Do not bump `package.json`'s `version` to mark a fork release. It would pose
+  as an upstream version and make a later merge from upstream ambiguous.
+- `sonox-1` is the state both consuming products shipped on 2026-11-06.
+- Both consumers pin: the SonoX appliance as a git submodule, SonoX-Pro through
+  `API_COMMIT` in its `postroot.sh`. Either accepts a tag name in place of a
+  hash - but only once the tag is pushed, because a pin that cannot be resolved
+  fails the Pro install by design.
+- Creating or pushing a tag stays under "Must Ask First".
+
 ## Branch And Change Hygiene
 
 - Use `codex/` branches for agent work.
