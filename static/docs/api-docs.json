@@ -200,7 +200,7 @@
             "default": "BBC Radio 6"
           }
         ],
-        "description": "Requires a configured license key."
+        "description": "Applies the preset, then replaces the queue of the preset's first player with the favorite and starts playback."
       }
     },
     "/presetplay/{preset}/{source}/{type}": {
@@ -241,7 +241,7 @@
             "default": "plist"
           }
         ],
-        "description": "Requires a configured license key."
+        "description": "Applies the preset, then replaces the queue of the preset's first player with the favorite (fav) or playlist (plist) and starts playback."
       }
     },
     "/services/all": {
